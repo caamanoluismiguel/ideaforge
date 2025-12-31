@@ -49,7 +49,12 @@ const saveIdea=async()=>{haptic([50,30,50]);const content=$('capTa').value.trim(
 const genTitle=async content=>{try{const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:`Generate short title (max 6 words) for: ${content}`}],max_tokens:30})});const data=await res.json();return data.choices[0].message.content.trim().replace(/^["']|["']$/g,'')}catch(e){return content.substring(0,40)+'...'}};
 
 const toggleRec=async()=>{if(S.isRec)stopRec();else await startRec()};
-const startRec=async()=>{try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(stream);S.chunks=[];S.mr.ondataavailable=e=>{if(e.data.size>0)S.chunks.push(e.data)};S.mr.onstop=async()=>{const blob=new Blob(S.chunks,{type:'audio/webm'});await transcribe(blob);stream.getTracks().forEach(t=>t.stop())};S.mr.start();S.isRec=true;S.recStart=Date.now();$('voiceBtn').classList.add('rec');$('voiceT').textContent=t('recording');$('capBox').classList.add('rec');$('recBar').classList.add('show');$('fab').classList.add('rec');S.recInt=setInterval(()=>{const e=Math.floor((Date.now()-S.recStart)/1000);$('recTime').textContent=`${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`},1000);haptic([50,30,50]);toast(t('toastRec'),'ok')}catch(e){toast(t('toastErr')+': '+e.message,'err')}};
+const startRec=async()=>{
+if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+  toast('Microphone requires HTTPS','err');
+  return;
+}
+try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(stream);S.chunks=[];S.mr.ondataavailable=e=>{if(e.data.size>0)S.chunks.push(e.data)};S.mr.onstop=async()=>{const blob=new Blob(S.chunks,{type:'audio/webm'});await transcribe(blob);stream.getTracks().forEach(t=>t.stop())};S.mr.start();S.isRec=true;S.recStart=Date.now();$('voiceBtn').classList.add('rec');$('voiceT').textContent=t('recording');$('capBox').classList.add('rec');$('recBar').classList.add('show');$('fab').classList.add('rec');S.recInt=setInterval(()=>{const e=Math.floor((Date.now()-S.recStart)/1000);$('recTime').textContent=`${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`},1000);haptic([50,30,50]);toast(t('toastRec'),'ok')}catch(e){toast(t('toastErr')+': '+e.message,'err')}};
 const stopRec=()=>{if(S.mr&&S.isRec){S.mr.stop();S.isRec=false;$('voiceBtn').classList.remove('rec');$('voiceT').textContent=t('record');$('capBox').classList.remove('rec');$('recBar').classList.remove('show');$('fab').classList.remove('rec');clearInterval(S.recInt);haptic([30,20,30])}};
 const transcribe=async blob=>{toast('Transcribing...','ok');const fd=new FormData();fd.append('file',blob,'rec.webm');fd.append('model','whisper-1');fd.append('language',S.user?.lang||'en');try{const res=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{'Authorization':`Bearer ${S.user.apiKey}`},body:fd});if(!res.ok)throw new Error('Failed');const data=await res.json();$('capPh').classList.add('hidden');$('capTa').classList.remove('hidden');$('capTa').value=data.text;$('capBox').classList.add('has');$('saveBtn').disabled=false;haptic([50,30,50]);toast(t('toastTrans'),'ok')}catch(e){toast(t('toastErr'),'err')}};
 
@@ -293,6 +298,9 @@ window.addEventListener('offline',()=>$('offline').classList.add('show'));
 if(!navigator.onLine)$('offline').classList.add('show');
 };
 
-const init=()=>{console.log('SPORA v1.0 init');load();initEvents();renderCats();renderMentors();if(S.user?.apiKey)goTo('main');else goTo('onboarding');console.log('Ready!')};
+const init=()=>{console.log('SPORA v1.0 init');
+// Register service worker for PWA
+if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW registered')).catch(e=>console.log('SW failed',e))}
+load();initEvents();renderCats();renderMentors();if(S.user?.apiKey)goTo('main');else goTo('onboarding');console.log('Ready!')};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
