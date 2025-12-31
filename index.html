@@ -1,422 +1,2079 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
 <title>IdeaForge</title>
 <link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--pri:#00d4aa;--sec:#7c3aed;--err:#ef4444;--t1:#f0f0f5;--t2:#9090a8;--t3:#5a5a70;--brd:rgba(255,255,255,0.08);--safe-b:env(safe-area-inset-bottom,20px)}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Outfit',system-ui;background:var(--bg);color:var(--t1);min-height:100dvh;padding:20px;padding-bottom:calc(100px + var(--safe-b))}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(at 0 0,rgba(0,212,170,.06),transparent 50%),radial-gradient(at 100% 100%,rgba(124,58,237,.06),transparent 50%);pointer-events:none;z-index:-1}
-.screen{display:none;animation:fadeIn .3s}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;border:none;border-radius:12px;font:500 15px/1 'Outfit';cursor:pointer;transition:.15s;min-height:52px}
-.btn:active{transform:scale(.97)}
-.btn-pri{background:linear-gradient(135deg,var(--pri),#00b894);color:var(--bg);box-shadow:0 4px 20px rgba(0,212,170,.4)}
-.btn-pri:disabled{opacity:.5}
-.btn-sec{background:var(--bg3);color:var(--t1);border:1px solid var(--brd)}
-.btn-full{width:100%}
-.btn-icon{width:48px;height:48px;padding:0;border-radius:50%;background:transparent;color:var(--t2)}
-input,textarea{width:100%;padding:16px;background:var(--bg3);border:1px solid var(--brd);border-radius:12px;color:var(--t1);font:16px 'Outfit';transition:.15s}
-input:focus,textarea:focus{outline:none;border-color:var(--pri)}
-input::placeholder,textarea::placeholder{color:var(--t3)}
-textarea{resize:none;min-height:120px}
-label{display:block;font:600 12px 'Outfit';color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.input-group{margin-bottom:24px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.header h1{font-size:28px}
-/* Onboarding */
-#onboarding{display:flex;flex-direction:column;justify-content:center;min-height:calc(100dvh - 40px)}
-.ob-logo{width:88px;height:88px;margin:0 auto 20px;background:linear-gradient(135deg,rgba(0,212,170,.15),rgba(124,58,237,.15));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:44px}
-.ob-title{font-size:32px;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,var(--pri),var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.ob-sub{text-align:center;color:var(--t2);margin-bottom:40px}
-.ob-card{background:var(--bg2);border:1px solid var(--brd);border-radius:24px;padding:28px 24px}
-.step-bar{display:flex;gap:8px;margin-bottom:28px}
-.step-bar div{flex:1;height:4px;background:var(--bg3);border-radius:2px}
-.step-bar div.done{background:var(--pri)}
-.ob-step{display:none}
-.ob-step.active{display:block}
-.step-title{font-size:20px;margin-bottom:6px}
-.step-desc{color:var(--t2);font-size:14px;margin-bottom:24px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.opt{padding:16px;background:var(--bg3);border:2px solid transparent;border-radius:12px;text-align:center;cursor:pointer;transition:.15s}
-.opt:active{transform:scale(.97)}
-.opt.sel{border-color:var(--pri);background:rgba(0,212,170,.1)}
-.opt .ico{font-size:28px;margin-bottom:6px}
-.opt .lbl{font-size:13px;font-weight:500}
-.btn-row{display:flex;gap:12px;margin-top:8px}
-.btn-row .btn{flex:1}
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-.stat{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:16px;text-align:center}
-.stat-val{font:700 28px 'Space Mono';background:linear-gradient(135deg,var(--pri),var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;margin-top:4px}
-/* Filters */
-.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
-.flt{flex-shrink:0;padding:10px 18px;background:var(--bg2);border:1px solid var(--brd);border-radius:100px;font-size:13px;color:var(--t2);cursor:pointer}
-.flt:active{transform:scale(.95)}
-.flt.on{background:var(--pri);color:var(--bg);border-color:transparent}
-/* Ideas */
-.ideas{display:flex;flex-direction:column;gap:12px}
-.idea{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:18px;cursor:pointer;position:relative}
-.idea:active{transform:scale(.985)}
-.idea-bar{position:absolute;top:16px;bottom:16px;left:0;width:3px;border-radius:0 3px 3px 0}
-.idea-head{display:flex;justify-content:space-between;margin-bottom:10px;padding-left:12px}
-.idea-badge{font:600 11px 'Outfit';text-transform:uppercase;padding:5px 12px;border-radius:100px}
-.idea-date{font:12px 'Space Mono';color:var(--t3)}
-.idea-title{font:600 17px 'Outfit';margin-bottom:8px;padding-left:12px}
-.idea-preview{font-size:14px;color:var(--t2);padding-left:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.idea-foot{display:flex;gap:16px;margin-top:14px;padding:14px 0 0 12px;border-top:1px solid var(--brd);font-size:12px;color:var(--t3)}
-/* Empty */
-.empty{text-align:center;padding:60px 24px}
-.empty .ico{font-size:56px;margin-bottom:20px;opacity:.5}
-.empty h3{font-size:20px;margin-bottom:10px}
-.empty p{color:var(--t2)}
-/* FAB */
-.fab-wrap{position:fixed;bottom:calc(100px + var(--safe-b));left:50%;transform:translateX(-50%);z-index:100}
-.fab{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pri),#00b894);border:none;color:var(--bg);font-size:28px;cursor:pointer;box-shadow:0 6px 28px rgba(0,212,170,.4);display:flex;align-items:center;justify-content:center}
-.fab:active{transform:scale(.92)}
-.fab.rec{background:linear-gradient(135deg,var(--err),#dc2626);animation:pulse 1.2s infinite}
-@keyframes pulse{50%{transform:scale(1.06)}}
-.rec-ind{position:fixed;bottom:calc(180px + var(--safe-b));left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--err);padding:10px 24px;border-radius:100px;display:none;align-items:center;gap:12px;z-index:100}
-.rec-ind.show{display:flex}
-.rec-dot{width:10px;height:10px;background:var(--err);border-radius:50%;animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.4}}
-.rec-time{font:16px 'Space Mono';color:var(--err)}
-/* Nav */
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,.95);backdrop-filter:blur(20px);border-top:1px solid var(--brd);padding:10px 24px calc(10px + var(--safe-b));display:flex;justify-content:space-around;z-index:90}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 20px;background:none;border:none;color:var(--t3);font:500 11px 'Outfit';cursor:pointer;border-radius:8px}
-.nav-item.on{color:var(--pri)}
-.nav-item .ico{font-size:22px}
-/* Capture */
-.cap-card{background:var(--bg2);border:2px dashed var(--brd);border-radius:24px;padding:32px 20px;margin-bottom:20px;min-height:180px;display:flex;flex-direction:column;transition:.25s}
-.cap-card.has{border-style:solid;border-color:var(--pri)}
-.cap-card.rec{border-color:var(--err);background:rgba(239,68,68,.1)}
-.cap-ph{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);text-align:center}
-.cap-ph .ico{font-size:48px;margin-bottom:12px;opacity:.6}
-.cap-ta{flex:1;background:transparent;border:none;color:var(--t1);font-size:17px;min-height:140px}
-.cap-ta:focus{outline:none}
-.voice-btn{width:100%;height:60px;border-radius:16px;background:var(--bg2);border:1px solid var(--brd);color:var(--t1);font:500 15px 'Outfit';cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
-.voice-btn:active{transform:scale(.98)}
-.voice-btn.rec{background:rgba(239,68,68,.1);border-color:var(--err);color:var(--err)}
-.form-sec{margin-bottom:24px}
-.form-sec-title{font:600 13px 'Outfit';color:var(--t3);text-transform:uppercase;margin-bottom:12px}
-.cat-grid{display:flex;flex-wrap:wrap;gap:10px}
-.cat-chip{padding:12px 18px;background:var(--bg3);border:1px solid var(--brd);border-radius:100px;font-size:14px;color:var(--t2);cursor:pointer}
-.cat-chip:active{transform:scale(.95)}
-.cat-chip.sel{background:var(--pri);color:var(--bg);border-color:transparent}
-/* Detail */
-.back-btn{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--t2);font:15px 'Outfit';cursor:pointer;padding:8px 0;margin-bottom:20px}
-.det-badge{display:inline-block;font:600 11px 'Outfit';text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:14px}
-.det-title{font-size:26px;margin-bottom:10px}
-.det-meta{font:13px 'Space Mono';color:var(--t3)}
-.det-content{font-size:17px;line-height:1.75;color:var(--t2);margin:28px 0;padding:20px;background:var(--bg2);border-radius:16px;border:1px solid var(--brd)}
-.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
-.act-card{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:18px;text-align:center;cursor:pointer}
-.act-card:active{transform:scale(.97)}
-.act-card .ico{font-size:26px;margin-bottom:10px}
-.act-card .lbl{font-size:13px;color:var(--t2)}
-/* Mentors */
-.ment-sec h3{font-size:18px;margin-bottom:8px}
-.ment-sec>p{font-size:14px;color:var(--t3);margin-bottom:20px}
-.ment-carousel{display:flex;gap:12px;overflow-x:auto;margin-bottom:16px}
-.ment-card{flex-shrink:0;width:130px;background:var(--bg2);border:2px solid var(--brd);border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer}
-.ment-card:active{transform:scale(.96)}
-.ment-card.sel{border-color:var(--sec);background:rgba(124,58,237,.1)}
-.ment-avatar{font-size:36px;margin-bottom:10px}
-.ment-name{font:600 14px 'Outfit';margin-bottom:4px}
-.ment-role{font-size:11px;color:var(--t3)}
-.ment-action{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:20px;display:none}
-.ment-action.show{display:block}
-.ment-sel-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.ment-sel-avatar{font-size:32px}
-.ment-sel-info h4{font-size:16px;margin-bottom:2px}
-.ment-sel-info p{font-size:12px;color:var(--t3)}
-.ment-fb{background:var(--bg3);border-radius:12px;padding:18px;margin-top:16px;display:none;font-size:15px;line-height:1.7;color:var(--t2);white-space:pre-wrap}
-.ment-fb.show{display:block}
-/* Connections */
-.conn-card{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:20px;margin-bottom:16px}
-.conn-theme{display:flex;align-items:center;gap:10px;font:600 14px 'Outfit';color:var(--sec);margin-bottom:14px}
-.conn-ideas{display:flex;flex-direction:column;gap:10px}
-.conn-item{background:var(--bg3);border-radius:8px;padding:14px;font-size:14px;cursor:pointer}
-.conn-insight{margin-top:16px;padding-top:16px;border-top:1px solid var(--brd);font-size:14px;color:var(--t2)}
-/* Settings */
-.set-sec{margin-bottom:32px}
-.set-sec-title{font:600 12px 'Outfit';color:var(--t3);text-transform:uppercase;margin-bottom:12px}
-.set-card{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;overflow:hidden}
-.set-item{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;border-bottom:1px solid var(--brd)}
-.set-item:last-child{border-bottom:none}
-.set-item:active{background:var(--bg3)}
-.set-item-left{display:flex;align-items:center;gap:14px}
-.set-item-ico{font-size:20px;width:28px;text-align:center}
-.set-item-lbl{font-size:15px}
-.set-item-val{font-size:14px;color:var(--t3)}
-.set-item.danger .set-item-lbl{color:var(--err)}
-.api-disp{font:13px 'Space Mono';color:var(--t3);background:var(--bg3);padding:8px 12px;border-radius:8px}
-/* Modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:flex-end;justify-content:center;z-index:200;padding:20px}
-.modal-bg.show{display:flex}
-.modal{background:var(--bg2);border-radius:24px 24px 0 0;padding:24px;padding-bottom:calc(24px + var(--safe-b));width:100%;max-width:500px;max-height:85vh;overflow-y:auto}
-.modal-handle{width:40px;height:4px;background:var(--brd);border-radius:2px;margin:0 auto 20px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.modal-head h3{font-size:20px}
-.modal-close{background:none;border:none;font-size:28px;color:var(--t3);cursor:pointer}
-.modal-content{font-size:15px;line-height:1.7;color:var(--t2);white-space:pre-wrap}
-/* Loading */
-.loading{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px}
-.spinner{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--pri);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Toast */
-.toast{position:fixed;bottom:calc(120px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--t1);padding:14px 28px;border-radius:100px;font:500 14px 'Outfit';z-index:300;opacity:0;transition:.25s;box-shadow:0 8px 32px rgba(0,0,0,.5);border:1px solid var(--brd)}
-.toast.show{opacity:1;transform:translateX(-50%)}
-.toast.ok{border-color:var(--pri)}
-.toast.err{border-color:var(--err)}
-.hidden{display:none!important}
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #111116;
+    --bg-tertiary: #1a1a22;
+    --bg-elevated: #222230;
+    --accent: #00d4aa;
+    --accent-dim: rgba(0, 212, 170, 0.12);
+    --accent-glow: rgba(0, 212, 170, 0.4);
+    --secondary: #7c3aed;
+    --secondary-dim: rgba(124, 58, 237, 0.12);
+    --danger: #ef4444;
+    --danger-dim: rgba(239, 68, 68, 0.12);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --text-muted: #606070;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-active: rgba(255, 255, 255, 0.16);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-height: 72px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ========== SCREEN SYSTEM ========== */
+.app-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    background: var(--bg-primary);
+    z-index: 1;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+}
+
+.screen-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px;
+    padding-top: calc(24px + var(--safe-top));
+}
+
+.screen-content.with-nav {
+    padding-bottom: calc(140px + var(--safe-bottom));
+}
+
+/* ========== ONBOARDING ========== */
+#onboarding {
+    background: var(--bg-primary);
+    z-index: 1000;
+}
+
+#onboarding::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.onboarding-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 24px;
+    padding-top: calc(40px + var(--safe-top));
+    padding-bottom: calc(40px + var(--safe-bottom));
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.brand-logo {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, var(--accent-dim), var(--secondary-dim));
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    box-shadow: 0 20px 60px rgba(0, 212, 170, 0.2);
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.brand-name {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-tagline {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.step-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px 24px;
+}
+
+.step-progress {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.step-progress-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.step-progress-bar.complete {
+    background: var(--accent);
+}
+
+.step-progress-bar.active {
+    background: linear-gradient(90deg, var(--accent) 50%, var(--bg-tertiary) 50%);
+}
+
+.step {
+    display: none;
+    animation: stepIn 0.4s ease;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes stepIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.step-header {
+    margin-bottom: 24px;
+}
+
+.step-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.step-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.option {
+    padding: 20px 16px;
+    background: var(--bg-tertiary);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option:active {
+    transform: scale(0.97);
+}
+
+.option.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.option-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.option-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.input-field {
+    width: 100%;
+    padding: 18px 20px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-dim);
+}
+
+.input-field::placeholder {
+    color: var(--text-muted);
+}
+
+textarea.input-field {
+    resize: none;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+.input-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: -8px;
+    margin-bottom: 16px;
+}
+
+.input-hint a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), #00b894);
+    color: var(--bg-primary);
+    box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* ========== MAIN SCREEN ========== */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+    background: var(--bg-tertiary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+}
+
+.filter-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.filter-chip:active {
+    transform: scale(0.96);
+}
+
+.filter-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-primary);
+}
+
+.ideas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.idea-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.idea-card:active {
+    transform: scale(0.985);
+    background: var(--bg-tertiary);
+}
+
+.idea-card-accent {
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+}
+
+.idea-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-left: 14px;
+}
+
+.idea-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 100px;
+}
+
+.idea-date {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.idea-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 14px;
+    line-height: 1.4;
+}
+
+.idea-preview {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding-left: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.idea-footer {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    padding-left: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.idea-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.empty-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ========== FAB ========== */
+.fab-container {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 24px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.fab {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #00b894);
+    border: none;
+    color: var(--bg-primary);
+    font-size: 26px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px var(--accent-glow);
+    transition: all 0.2s;
+}
+
+.fab:active {
+    transform: scale(0.92);
+}
+
+.fab.recording {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.5);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* ========== RECORDING INDICATOR ========== */
+.recording-indicator {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 100px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    border: 1px solid var(--danger);
+    padding: 12px 28px;
+    border-radius: 100px;
+    display: none;
+    align-items: center;
+    gap: 14px;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.recording-indicator.visible {
+    display: flex;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.recording-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--danger);
+    border-radius: 50%;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.recording-time {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--danger);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ========== BOTTOM NAV ========== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--nav-height) + var(--safe-bottom));
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 12px;
+    z-index: 90;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 24px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.nav-item.active {
+    color: var(--accent);
+}
+
+.nav-icon {
+    font-size: 22px;
+}
+
+/* ========== CAPTURE SCREEN ========== */
+.capture-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.capture-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.capture-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.capture-area {
+    background: var(--bg-secondary);
+    border: 2px dashed var(--border);
+    border-radius: 24px;
+    padding: 32px 24px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.capture-area.has-content {
+    border-style: solid;
+    border-color: var(--accent);
+}
+
+.capture-area.recording {
+    border-color: var(--danger);
+    background: var(--danger-dim);
+}
+
+.capture-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.capture-placeholder-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.capture-placeholder-text {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.capture-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.7;
+    resize: none;
+    min-height: 160px;
+}
+
+.capture-textarea:focus {
+    outline: none;
+}
+
+.capture-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.voice-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s;
+    margin-bottom: 28px;
+}
+
+.voice-btn:active {
+    transform: scale(0.98);
+}
+
+.voice-btn.recording {
+    background: var(--danger-dim);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.voice-btn-icon {
+    font-size: 22px;
+}
+
+.form-section {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+}
+
+.category-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category-chip {
+    padding: 12px 20px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-chip:active {
+    transform: scale(0.95);
+}
+
+.category-chip.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-primary);
+    font-weight: 500;
+}
+
+.category-chip.add {
+    border-style: dashed;
+    color: var(--text-muted);
+}
+
+/* ========== DETAIL SCREEN ========== */
+.detail-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.detail-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 8px 16px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+}
+
+.detail-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+.detail-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.detail-content {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin: 28px 0;
+    padding: 24px;
+    background: var(--bg-secondary);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 36px;
+}
+
+.action-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-card:active {
+    transform: scale(0.97);
+    background: var(--bg-tertiary);
+}
+
+.action-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.action-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* ========== MENTORS SECTION ========== */
+.section-header {
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.section-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.mentor-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+}
+
+.mentor-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.mentor-card {
+    flex-shrink: 0;
+    width: 120px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mentor-card:active {
+    transform: scale(0.96);
+}
+
+.mentor-card.selected {
+    border-color: var(--secondary);
+    background: var(--secondary-dim);
+}
+
+.mentor-avatar {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.mentor-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.mentor-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.mentor-action-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.mentor-action-panel.visible {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mentor-selected-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.mentor-selected-avatar {
+    font-size: 36px;
+}
+
+.mentor-selected-name {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.mentor-selected-role {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.mentor-feedback {
+    background: var(--bg-tertiary);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 20px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.mentor-feedback.visible {
+    display: block;
+}
+
+.mentor-feedback-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+}
+
+/* ========== CONNECTIONS SCREEN ========== */
+.connections-intro {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.connection-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.connection-theme {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.connection-ideas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.connection-idea-item {
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.connection-idea-item:active {
+    background: var(--bg-elevated);
+}
+
+.connection-insight {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ========== SETTINGS SCREEN ========== */
+.settings-section {
+    margin-bottom: 32px;
+}
+
+.settings-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    padding-left: 4px;
+}
+
+.settings-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item:active {
+    background: var(--bg-tertiary);
+}
+
+.settings-item-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.settings-item-icon {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+}
+
+.settings-item-label {
+    font-size: 15px;
+}
+
+.settings-item-value {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.settings-item.danger .settings-item-label {
+    color: var(--danger);
+}
+
+.api-display {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-family: monospace;
+}
+
+/* ========== MODALS ========== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
+}
+
+.modal-overlay.visible {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal {
+    background: var(--bg-secondary);
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px;
+    padding-bottom: calc(28px + var(--safe-bottom));
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.modal-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 24px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-content {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+}
+
+/* ========== LOADING ========== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 48px 20px;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* ========== TOAST ========== */
+.toast {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 90px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 16px 28px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.toast.success {
+    border-color: var(--accent);
+}
+
+.toast.error {
+    border-color: var(--danger);
+}
+
+/* ========== UTILITIES ========== */
+.hidden {
+    display: none !important;
+}
 </style>
 </head>
 <body>
-<!-- ONBOARDING -->
-<div id="onboarding" class="screen active">
-<div class="ob-logo">💡</div>
-<h1 class="ob-title">IdeaForge</h1>
-<p class="ob-sub" data-t="ob.sub"></p>
-<div class="ob-card">
-<div class="step-bar"><div class="done" data-s="1"></div><div data-s="2"></div><div data-s="3"></div><div data-s="4"></div></div>
-<div class="ob-step active" data-s="1">
-<h2 class="step-title">Choose your language</h2>
-<p class="step-desc">Select your preferred language</p>
-<div class="grid-2">
-<div class="opt sel" data-l="en"><div class="ico">🇺🇸</div><div class="lbl">English</div></div>
-<div class="opt" data-l="es"><div class="ico">🇪🇸</div><div class="lbl">Español</div></div>
+<div class="app-container">
+    <!-- ONBOARDING SCREEN -->
+    <div id="onboarding" class="screen active">
+        <div class="onboarding-content">
+            <div class="brand">
+                <div class="brand-logo">💡</div>
+                <h1 class="brand-name">IdeaForge</h1>
+                <p class="brand-tagline" data-t="tagline"></p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-progress">
+                    <div class="step-progress-bar complete" data-step="1"></div>
+                    <div class="step-progress-bar" data-step="2"></div>
+                    <div class="step-progress-bar" data-step="3"></div>
+                    <div class="step-progress-bar" data-step="4"></div>
+                </div>
+                
+                <!-- Step 1: Language -->
+                <div class="step active" data-step="1">
+                    <div class="step-header">
+                        <h2 class="step-title">Choose your language</h2>
+                        <p class="step-desc">Select your preferred language for the app</p>
+                    </div>
+                    <div class="options-grid">
+                        <div class="option selected" data-lang="en">
+                            <div class="option-icon">🇺🇸</div>
+                            <div class="option-label">English</div>
+                        </div>
+                        <div class="option" data-lang="es">
+                            <div class="option-icon">🇪🇸</div>
+                            <div class="option-label">Español</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="nextStep()" data-t="continue"></button>
+                </div>
+                
+                <!-- Step 2: Profession -->
+                <div class="step" data-step="2">
+                    <div class="step-header">
+                        <h2 class="step-title" data-t="step2.title"></h2>
+                        <p class="step-desc" data-t="step2.desc"></p>
+                    </div>
+                    <div class="options-grid" id="professionGrid">
+                        <div class="option" data-prof="entrepreneur"><div class="option-icon">🚀</div><div class="option-label" data-t="prof.entrepreneur"></div></div>
+                        <div class="option" data-prof="creative"><div class="option-icon">🎨</div><div class="option-label" data-t="prof.creative"></div></div>
+                        <div class="option" data-prof="developer"><div class="option-icon">💻</div><div class="option-label" data-t="prof.developer"></div></div>
+                        <div class="option" data-prof="consultant"><div class="option-icon">📊</div><div class="option-label" data-t="prof.consultant"></div></div>
+                        <div class="option" data-prof="academic"><div class="option-icon">📚</div><div class="option-label" data-t="prof.academic"></div></div>
+                        <div class="option" data-prof="marketing"><div class="option-icon">📢</div><div class="option-label" data-t="prof.marketing"></div></div>
+                    </div>
+                    <input type="text" class="input-field" id="customProfession" data-tp="step2.custom">
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="prevStep()" data-t="back"></button>
+                        <button class="btn btn-primary" onclick="nextStep()" data-t="continue"></button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Context -->
+                <div class="step" data-step="3">
+                    <div class="step-header">
+                        <h2 class="step-title" data-t="step3.title"></h2>
+                        <p class="step-desc" data-t="step3.desc"></p>
+                    </div>
+                    <textarea class="input-field" id="userContext" data-tp="step3.placeholder"></textarea>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="prevStep()" data-t="back"></button>
+                        <button class="btn btn-primary" onclick="nextStep()" data-t="continue"></button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: API Key -->
+                <div class="step" data-step="4">
+                    <div class="step-header">
+                        <h2 class="step-title" data-t="step4.title"></h2>
+                        <p class="step-desc" data-t="step4.desc"></p>
+                    </div>
+                    <input type="password" class="input-field" id="apiKeyInput" placeholder="sk-...">
+                    <p class="input-hint"><span data-t="step4.hint"></span> <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></p>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="prevStep()" data-t="back"></button>
+                        <button class="btn btn-primary" onclick="completeOnboarding()" data-t="start"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MAIN SCREEN -->
+    <div id="main" class="screen">
+        <div class="screen-content with-nav">
+            <div class="header">
+                <h1 class="header-title" data-t="ideas"></h1>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="searchIdeas()">🔍</button>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statIdeas">0</div>
+                    <div class="stat-label" data-t="stat.ideas"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statCategories">0</div>
+                    <div class="stat-label" data-t="stat.categories"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statFeedback">0</div>
+                    <div class="stat-label" data-t="stat.feedback"></div>
+                </div>
+            </div>
+            
+            <div class="filter-scroll" id="filterContainer"></div>
+            <div class="ideas-list" id="ideasList"></div>
+        </div>
+    </div>
+    
+    <!-- CAPTURE SCREEN -->
+    <div id="capture" class="screen">
+        <div class="screen-content">
+            <button class="back-btn" onclick="navigateTo('main')">← <span data-t="cancel"></span></button>
+            
+            <div class="capture-header">
+                <h1 class="capture-title" data-t="newIdea"></h1>
+                <p class="capture-subtitle" data-t="newIdeaDesc"></p>
+            </div>
+            
+            <div class="capture-area" id="captureArea">
+                <div class="capture-placeholder" id="capturePlaceholder">
+                    <div class="capture-placeholder-icon">🎤</div>
+                    <p class="capture-placeholder-text" data-t="capturePlaceholder"></p>
+                </div>
+                <textarea class="capture-textarea hidden" id="captureTextarea" data-tp="captureTextareaPlaceholder"></textarea>
+            </div>
+            
+            <button class="voice-btn" id="voiceBtn" onclick="toggleRecording()">
+                <span class="voice-btn-icon">🎤</span>
+                <span id="voiceBtnLabel" data-t="recordIdea"></span>
+            </button>
+            
+            <div class="form-section">
+                <div class="form-label" data-t="category"></div>
+                <div class="category-grid" id="categoryGrid"></div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-label" data-t="titleOptional"></div>
+                <input type="text" class="input-field" id="ideaTitleInput" data-tp="titlePlaceholder">
+            </div>
+            
+            <button class="btn btn-primary btn-full" id="saveIdeaBtn" onclick="saveIdea()" disabled data-t="saveIdea"></button>
+        </div>
+    </div>
+    
+    <!-- DETAIL SCREEN -->
+    <div id="detail" class="screen">
+        <div class="screen-content">
+            <div class="detail-nav">
+                <button class="back-btn" onclick="navigateTo('main')">← <span data-t="back"></span></button>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="editIdea()">✏️</button>
+                    <button class="icon-btn" onclick="deleteIdea()">🗑️</button>
+                </div>
+            </div>
+            
+            <div class="detail-badge" id="detailBadge"></div>
+            <h1 class="detail-title" id="detailTitle"></h1>
+            <p class="detail-meta" id="detailMeta"></p>
+            <div class="detail-content" id="detailContent"></div>
+            
+            <div class="action-grid">
+                <div class="action-card" onclick="showInsights()">
+                    <div class="action-icon">💡</div>
+                    <div class="action-label" data-t="insights"></div>
+                </div>
+                <div class="action-card" onclick="showRoadmap()">
+                    <div class="action-icon">🗺️</div>
+                    <div class="action-label" data-t="roadmap"></div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2 class="section-title" data-t="askMentor"></h2>
+                <p class="section-desc" data-t="askMentorDesc"></p>
+            </div>
+            
+            <div class="mentor-scroll" id="mentorScroll"></div>
+            
+            <div class="mentor-action-panel" id="mentorActionPanel">
+                <div class="mentor-selected-header">
+                    <div class="mentor-selected-avatar" id="selectedMentorAvatar"></div>
+                    <div>
+                        <div class="mentor-selected-name" id="selectedMentorName"></div>
+                        <div class="mentor-selected-role" id="selectedMentorRole"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" id="askMentorBtn" onclick="askMentor()" data-t="getFeedback"></button>
+                <div class="mentor-feedback" id="mentorFeedback">
+                    <div class="mentor-feedback-text" id="mentorFeedbackText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CONNECTIONS SCREEN -->
+    <div id="connections" class="screen">
+        <div class="screen-content with-nav">
+            <div class="header">
+                <h1 class="header-title" data-t="connections"></h1>
+            </div>
+            <div class="connections-intro">
+                <p class="section-desc" data-t="connectionsDesc"></p>
+            </div>
+            <div id="connectionsList"></div>
+            <button class="btn btn-primary btn-full" id="findConnectionsBtn" onclick="findConnections()" style="margin-top: 24px;" data-t="findConnections"></button>
+        </div>
+    </div>
+    
+    <!-- SETTINGS SCREEN -->
+    <div id="settings" class="screen">
+        <div class="screen-content with-nav">
+            <div class="header">
+                <h1 class="header-title" data-t="settings"></h1>
+                <button class="btn btn-ghost" onclick="navigateTo('main')" data-t="done"></button>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-section-title" data-t="profile"></div>
+                <div class="settings-card">
+                    <div class="settings-item" onclick="editProfile()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">👤</span>
+                            <span class="settings-item-label" data-t="profession"></span>
+                        </div>
+                        <span class="settings-item-value" id="settingsProfession">-</span>
+                    </div>
+                    <div class="settings-item" onclick="toggleLanguage()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">🌐</span>
+                            <span class="settings-item-label" data-t="language"></span>
+                        </div>
+                        <span class="settings-item-value" id="settingsLanguage">English</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-section-title" data-t="apiConfig"></div>
+                <div class="settings-card">
+                    <div class="settings-item" onclick="editApiKey()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">🔑</span>
+                            <span class="settings-item-label" data-t="apiKey"></span>
+                        </div>
+                        <span class="api-display" id="settingsApiKey">••••</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-section-title" data-t="data"></div>
+                <div class="settings-card">
+                    <div class="settings-item" onclick="exportData()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">📤</span>
+                            <span class="settings-item-label" data-t="exportBackup"></span>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="importData()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">📥</span>
+                            <span class="settings-item-label" data-t="importBackup"></span>
+                        </div>
+                    </div>
+                    <div class="settings-item danger" onclick="clearAllData()">
+                        <div class="settings-item-left">
+                            <span class="settings-item-icon">🗑️</span>
+                            <span class="settings-item-label" data-t="deleteAll"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAB -->
+    <div class="fab-container" id="fabContainer">
+        <button class="fab" id="fab" onclick="navigateTo('capture')">🎤</button>
+    </div>
+    
+    <!-- Recording Indicator -->
+    <div class="recording-indicator" id="recordingIndicator">
+        <div class="recording-dot"></div>
+        <div class="recording-time" id="recordingTime">00:00</div>
+    </div>
+    
+    <!-- Bottom Nav -->
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-screen="main" onclick="navigateTo('main')">
+            <span class="nav-icon">💡</span>
+            <span data-t="nav.ideas"></span>
+        </button>
+        <button class="nav-item" data-screen="connections" onclick="navigateTo('connections')">
+            <span class="nav-icon">🔗</span>
+            <span data-t="nav.connections"></span>
+        </button>
+        <button class="nav-item" data-screen="settings" onclick="navigateTo('settings')">
+            <span class="nav-icon">⚙️</span>
+            <span data-t="nav.settings"></span>
+        </button>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal-overlay" id="insightsModal" onclick="if(event.target===this)closeModal('insightsModal')">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h3 class="modal-title">💡 <span data-t="insights"></span></h3>
+                <button class="modal-close" onclick="closeModal('insightsModal')">×</button>
+            </div>
+            <div class="modal-content" id="insightsContent"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="roadmapModal" onclick="if(event.target===this)closeModal('roadmapModal')">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h3 class="modal-title">🗺️ <span data-t="roadmap"></span></h3>
+                <button class="modal-close" onclick="closeModal('roadmapModal')">×</button>
+            </div>
+            <div class="modal-content" id="roadmapContent"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="categoryModal" onclick="if(event.target===this)closeModal('categoryModal')">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h3 class="modal-title" data-t="newCategory"></h3>
+                <button class="modal-close" onclick="closeModal('categoryModal')">×</button>
+            </div>
+            <div class="form-section">
+                <div class="form-label" data-t="categoryName"></div>
+                <input type="text" class="input-field" id="newCategoryName" placeholder="e.g., Hobbies">
+            </div>
+            <div class="form-section">
+                <div class="form-label" data-t="categoryEmoji"></div>
+                <input type="text" class="input-field" id="newCategoryEmoji" placeholder="🎮" maxlength="2">
+            </div>
+            <button class="btn btn-primary btn-full" onclick="createCategory()" data-t="createCategory"></button>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+    <!-- Hidden file input -->
+    <input type="file" id="importInput" accept=".json" style="display:none">
 </div>
-<button class="btn btn-pri btn-full" onclick="nextStep()" data-t="btn.cont"></button>
-</div>
-<div class="ob-step" data-s="2">
-<h2 class="step-title" data-t="ob.prof.title"></h2>
-<p class="step-desc" data-t="ob.prof.desc"></p>
-<div class="grid-2">
-<div class="opt" data-v="entrepreneur"><div class="ico">🚀</div><div class="lbl" data-t="prof.entrepreneur"></div></div>
-<div class="opt" data-v="creative"><div class="ico">🎨</div><div class="lbl" data-t="prof.creative"></div></div>
-<div class="opt" data-v="developer"><div class="ico">💻</div><div class="lbl" data-t="prof.developer"></div></div>
-<div class="opt" data-v="consultant"><div class="ico">📊</div><div class="lbl" data-t="prof.consultant"></div></div>
-<div class="opt" data-v="academic"><div class="ico">📚</div><div class="lbl" data-t="prof.academic"></div></div>
-<div class="opt" data-v="marketing"><div class="ico">📢</div><div class="lbl" data-t="prof.marketing"></div></div>
-</div>
-<div class="input-group" style="margin-top:16px;margin-bottom:0"><input type="text" id="customProf" data-tp="ob.prof.custom"></div>
-<div class="btn-row"><button class="btn btn-sec" onclick="prevStep()" data-t="btn.back"></button><button class="btn btn-pri" onclick="nextStep()" data-t="btn.cont"></button></div>
-</div>
-<div class="ob-step" data-s="3">
-<h2 class="step-title" data-t="ob.ctx.title"></h2>
-<p class="step-desc" data-t="ob.ctx.desc"></p>
-<div class="input-group" style="margin-bottom:0"><textarea id="userCtx" data-tp="ob.ctx.ph"></textarea></div>
-<div class="btn-row"><button class="btn btn-sec" onclick="prevStep()" data-t="btn.back"></button><button class="btn btn-pri" onclick="nextStep()" data-t="btn.cont"></button></div>
-</div>
-<div class="ob-step" data-s="4">
-<h2 class="step-title" data-t="ob.api.title"></h2>
-<p class="step-desc" data-t="ob.api.desc"></p>
-<div class="input-group" style="margin-bottom:12px"><input type="password" id="apiKey" placeholder="sk-..."></div>
-<p style="font-size:13px;color:var(--t3);margin-bottom:20px"><span data-t="ob.api.hint"></span> <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--pri)">platform.openai.com</a></p>
-<div class="btn-row"><button class="btn btn-sec" onclick="prevStep()" data-t="btn.back"></button><button class="btn btn-pri" onclick="finishOb()" data-t="ob.start"></button></div>
-</div>
-</div>
-</div>
+ state.selectedMentor,
+            feedback,
+            date: new Date().toISOString()
+        });
+        saveState();
+        updateStats();
+        
+        // Show feedback
+        document.getElementById('mentorFeedbackText').textContent = feedback;
+        document.getElementById('mentorFeedback').classList.add('visible');
+        haptic([50, 30, 50]);
+        
+    } catch (e) {
+        console.error('Mentor error:', e);
+        showToast(t('toast.error'), 'error');
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = t('getFeedback');
+}
 
-<!-- MAIN -->
-<div id="main" class="screen">
-<div class="header"><h1 data-t="main.title"></h1><button class="btn btn-icon" onclick="doSearch()">🔍</button></div>
-<div class="stats">
-<div class="stat"><div class="stat-val" id="sIdeas">0</div><div class="stat-lbl" data-t="stat.ideas"></div></div>
-<div class="stat"><div class="stat-val" id="sCats">0</div><div class="stat-lbl" data-t="stat.cats"></div></div>
-<div class="stat"><div class="stat-val" id="sFb">0</div><div class="stat-lbl" data-t="stat.fb"></div></div>
-</div>
-<div class="filters" id="filters"></div>
-<div class="ideas" id="ideasList"></div>
-</div>
+// ============ INSIGHTS & ROADMAP ============
+async function showInsights() {
+    haptic();
+    openModal('insightsModal');
+    document.getElementById('insightsContent').innerHTML = `<div class="loading-container"><div class="spinner"></div><div class="loading-text">Analyzing...</div></div>`;
+    
+    const lang = state.user?.lang || 'en';
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${state.user.apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o',
+                messages: [
+                    { role: 'system', content: `Generate deep insights: 💎 Unique value proposition, 🎯 Ideal target audience, ⚠️ Primary risk, 🚀 Non-obvious opportunity, 💡 Powerful question to reflect on. Be concise. Respond in ${lang === 'es' ? 'Spanish' : 'English'}.` },
+                    { role: 'user', content: `Context: ${state.user.profession}. ${state.user.context || ''}\n\nIdea: "${state.currentIdea.title}"\n${state.currentIdea.content}` }
+                ],
+                max_tokens: 600
+            })
+        });
+        
+        const data = await response.json();
+        document.getElementById('insightsContent').innerHTML = data.choices[0].message.content;
+    } catch (e) {
+        document.getElementById('insightsContent').innerHTML = t('toast.error');
+    }
+}
 
-<!-- CAPTURE -->
-<div id="capture" class="screen">
-<button class="back-btn" onclick="go('main')">← <span data-t="btn.cancel"></span></button>
-<h2 style="text-align:center;margin-bottom:6px" data-t="cap.title"></h2>
-<p style="text-align:center;color:var(--t2);margin-bottom:28px" data-t="cap.sub"></p>
-<div class="cap-card" id="capCard">
-<div class="cap-ph" id="capPh"><div class="ico">🎤</div><p data-t="cap.ph"></p></div>
-<textarea class="cap-ta hidden" id="capTa" data-tp="cap.ta.ph"></textarea>
-</div>
-<button class="voice-btn" id="voiceBtn" onclick="toggleRec()"><span class="ico">🎤</span><span id="voiceLbl" data-t="cap.rec"></span></button>
-<div class="form-sec"><div class="form-sec-title" data-t="cap.cat"></div><div class="cat-grid" id="catGrid"></div></div>
-<div class="form-sec"><label data-t="cap.title.lbl"></label><input type="text" id="ideaTitle" data-tp="cap.title.ph"></div>
-<button class="btn btn-pri btn-full" id="saveBtn" onclick="saveIdea()" disabled data-t="cap.save"></button>
-</div>
+async function showRoadmap() {
+    haptic();
+    openModal('roadmapModal');
+    document.getElementById('roadmapContent').innerHTML = `<div class="loading-container"><div class="spinner"></div><div class="loading-text">Creating roadmap...</div></div>`;
+    
+    const lang = state.user?.lang || 'en';
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${state.user.apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o',
+                messages: [
+                    { role: 'system', content: `Create a practical roadmap: 📅 WEEK 1, 📅 WEEKS 2-4, 📅 MONTHS 2-3, 💰 Estimated investment, ⏱️ Time to MVP. Be realistic and specific. Respond in ${lang === 'es' ? 'Spanish' : 'English'}.` },
+                    { role: 'user', content: `Context: ${state.user.profession}. ${state.user.context || ''}\n\nIdea: "${state.currentIdea.title}"\n${state.currentIdea.content}` }
+                ],
+                max_tokens: 800
+            })
+        });
+        
+        const data = await response.json();
+        document.getElementById('roadmapContent').innerHTML = data.choices[0].message.content;
+    } catch (e) {
+        document.getElementById('roadmapContent').innerHTML = t('toast.error');
+    }
+}
 
-<!-- DETAIL -->
-<div id="detail" class="screen">
-<div style="display:flex;justify-content:space-between;margin-bottom:20px">
-<button class="back-btn" onclick="go('main')" style="margin:0">← <span data-t="btn.back"></span></button>
-<div><button class="btn btn-icon" onclick="editIdea()">✏️</button><button class="btn btn-icon" onclick="delIdea()">🗑️</button></div>
-</div>
-<div class="det-badge" id="detBadge"></div>
-<h1 class="det-title" id="detTitle"></h1>
-<div class="det-meta" id="detMeta"></div>
-<div class="det-content" id="detContent"></div>
-<div class="act-grid">
-<div class="act-card" onclick="showInsights()"><div class="ico">💡</div><div class="lbl" data-t="act.insights"></div></div>
-<div class="act-card" onclick="showRoadmap()"><div class="ico">🗺️</div><div class="lbl" data-t="act.roadmap"></div></div>
-</div>
-<div class="ment-sec">
-<h3 data-t="ment.title"></h3>
-<p data-t="ment.desc"></p>
-<div class="ment-carousel" id="mentCarousel"></div>
-<div class="ment-action" id="mentAction">
-<div class="ment-sel-head"><div class="ment-sel-avatar" id="selMentAv"></div><div class="ment-sel-info"><h4 id="selMentName"></h4><p id="selMentRole"></p></div></div>
-<button class="btn btn-pri btn-full" id="askMentBtn" onclick="askMentor()" data-t="ment.ask"></button>
-<div class="ment-fb" id="mentFb"></div>
-</div>
-</div>
-</div>
+// ============ CONNECTIONS ============
+async function findConnections() {
+    if (state.ideas.length < 3) {
+        showToast(t('toast.needMore'), 'error');
+        return;
+    }
+    
+    haptic();
+    const btn = document.getElementById('findConnectionsBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:10px"></div> Analyzing...';
+    
+    const lang = state.user?.lang || 'en';
+    const summary = state.ideas.map(i => `- ${i.title}: ${i.content.substring(0, 80)}`).join('\n');
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${state.user.apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o',
+                messages: [
+                    { role: 'system', content: `Find 2-3 groups of connected ideas. Respond in JSON only: {"connections":[{"theme":"...","ideas":["title1","title2"],"insight":"how they could combine..."}]}. Respond in ${lang === 'es' ? 'Spanish' : 'English'}.` },
+                    { role: 'user', content: `My ideas:\n${summary}` }
+                ],
+                max_tokens: 800
+            })
+        });
+        
+        const data = await response.json();
+        const content = data.choices[0].message.content.replace(/```json\n?|\n?```/g, '');
+        state.connections = JSON.parse(content).connections;
+        saveState();
+        renderConnections();
+        haptic([50, 30, 50]);
+        
+    } catch (e) {
+        console.error('Connections error:', e);
+        showToast(t('toast.error'), 'error');
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = t('findConnections');
+}
 
-<!-- CONNECTIONS -->
-<div id="connections" class="screen">
-<div class="header"><h1 data-t="conn.title"></h1></div>
-<p style="text-align:center;color:var(--t2);margin-bottom:28px" data-t="conn.desc"></p>
-<div id="connList"></div>
-<button class="btn btn-pri btn-full" onclick="findConns()" id="findConnBtn" style="margin-top:24px" data-t="conn.find"></button>
-</div>
+function renderConnections() {
+    const container = document.getElementById('connectionsList');
+    
+    if (!state.connections?.length) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔗</div>
+                <h3 class="empty-title">${t('conn.empty.title')}</h3>
+                <p class="empty-desc">${t('conn.empty.desc')}</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = state.connections.map(conn => `
+        <div class="connection-card">
+            <div class="connection-theme">🔗 ${conn.theme}</div>
+            <div class="connection-ideas">
+                ${conn.ideas.map(title => {
+                    const idea = state.ideas.find(i => i.title === title);
+                    return `<div class="connection-idea-item" ${idea ? `onclick="viewIdea('${idea.id}')"` : ''}>${title}</div>`;
+                }).join('')}
+            </div>
+            <div class="connection-insight">${conn.insight}</div>
+        </div>
+    `).join('');
+}
 
-<!-- SETTINGS -->
-<div id="settings" class="screen">
-<div class="header"><h1 data-t="set.title"></h1><button class="btn btn-sec" onclick="go('main')" data-t="btn.done"></button></div>
-<div class="set-sec">
-<div class="set-sec-title" data-t="set.profile"></div>
-<div class="set-card">
-<div class="set-item" onclick="editProf()"><div class="set-item-left"><span class="set-item-ico">👤</span><span class="set-item-lbl" data-t="set.prof"></span></div><span class="set-item-val" id="setProfVal">-</span></div>
-<div class="set-item" onclick="toggleLang()"><div class="set-item-left"><span class="set-item-ico">🌐</span><span class="set-item-lbl" data-t="set.lang"></span></div><span class="set-item-val" id="setLangVal">English</span></div>
-</div>
-</div>
-<div class="set-sec">
-<div class="set-sec-title" data-t="set.api"></div>
-<div class="set-card">
-<div class="set-item" onclick="editApiKey()"><div class="set-item-left"><span class="set-item-ico">🔑</span><span class="set-item-lbl" data-t="set.apiKey"></span></div><span class="api-disp" id="apiDisp">••••</span></div>
-</div>
-</div>
-<div class="set-sec">
-<div class="set-sec-title" data-t="set.data"></div>
-<div class="set-card">
-<div class="set-item" onclick="expData()"><div class="set-item-left"><span class="set-item-ico">📤</span><span class="set-item-lbl" data-t="set.export"></span></div></div>
-<div class="set-item" onclick="impData()"><div class="set-item-left"><span class="set-item-ico">📥</span><span class="set-item-lbl" data-t="set.import"></span></div></div>
-<div class="set-item danger" onclick="clearData()"><div class="set-item-left"><span class="set-item-ico">🗑️</span><span class="set-item-lbl" data-t="set.delete"></span></div></div>
-</div>
-</div>
-</div>
+// ============ SETTINGS ============
+function updateSettingsDisplay() {
+    document.getElementById('settingsProfession').textContent = state.user?.profession || '-';
+    document.getElementById('settingsLanguage').textContent = state.user?.lang === 'es' ? 'Español' : 'English';
+    const apiKey = state.user?.apiKey || '';
+    document.getElementById('settingsApiKey').textContent = apiKey ? '••••' + apiKey.slice(-4) : '••••';
+}
 
-<!-- MODALS -->
-<div class="modal-bg" id="insightsModal" onclick="if(event.target===this)closeModal('insightsModal')"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3>💡 <span data-t="modal.insights"></span></h3><button class="modal-close" onclick="closeModal('insightsModal')">×</button></div><div class="modal-content" id="insightsContent"></div></div></div>
-<div class="modal-bg" id="roadmapModal" onclick="if(event.target===this)closeModal('roadmapModal')"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3>🗺️ <span data-t="modal.roadmap"></span></h3><button class="modal-close" onclick="closeModal('roadmapModal')">×</button></div><div class="modal-content" id="roadmapContent"></div></div></div>
-<div class="modal-bg" id="catModal" onclick="if(event.target===this)closeModal('catModal')"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 data-t="modal.newCat"></h3><button class="modal-close" onclick="closeModal('catModal')">×</button></div><div class="input-group"><label data-t="modal.catName"></label><input type="text" id="newCatName"></div><div class="input-group"><label data-t="modal.catEmoji"></label><input type="text" id="newCatEmoji" maxlength="2"></div><button class="btn btn-pri btn-full" onclick="createCat()" data-t="modal.createCat"></button></div></div>
+function editProfile() {
+    haptic();
+    const newProf = prompt('Profession:', state.user?.profession || '');
+    if (newProf !== null) {
+        state.user.profession = newProf;
+        const newCtx = prompt('Context:', state.user?.context || '');
+        if (newCtx !== null) state.user.context = newCtx;
+        saveState();
+        updateSettingsDisplay();
+    }
+}
 
-<!-- FAB, Recording, Nav, Toast -->
-<div class="fab-wrap" id="fabWrap"><button class="fab" id="fab" onclick="go('capture')">🎤</button></div>
-<div class="rec-ind" id="recInd"><div class="rec-dot"></div><div class="rec-time" id="recTime">00:00</div></div>
-<div class="nav" id="nav">
-<button class="nav-item on" data-s="main" onclick="go('main')"><span class="ico">💡</span><span data-t="nav.ideas"></span></button>
-<button class="nav-item" data-s="connections" onclick="go('connections')"><span class="ico">🔗</span><span data-t="nav.conn"></span></button>
-<button class="nav-item" data-s="settings" onclick="go('settings')"><span class="ico">⚙️</span><span data-t="nav.set"></span></button>
-</div>
-<div class="toast" id="toast"></div>
-<input type="file" id="impInput" accept=".json" style="display:none">
-<script>
-// i18n
-const T={en:{'ob.sub':'Capture, refine, and connect your ideas','ob.prof.title':'What do you do?','ob.prof.desc':'This helps mentors give relevant feedback','ob.prof.custom':'Or type your profession...','ob.ctx.title':'Tell me more about you','ob.ctx.desc':'What industry? What projects?','ob.ctx.ph':'E.g., UX designer at fintech startup...','ob.api.title':'OpenAI API Key','ob.api.desc':'Required for voice & AI. Stored only on your device.','ob.api.hint':'Get your key at','ob.start':'Start Creating','prof.entrepreneur':'Entrepreneur','prof.creative':'Creative','prof.developer':'Developer','prof.consultant':'Consultant','prof.academic':'Academic','prof.marketing':'Marketing','btn.cont':'Continue','btn.back':'Back','btn.cancel':'Cancel','btn.done':'Done','main.title':'Ideas','stat.ideas':'Ideas','stat.cats':'Categories','stat.fb':'Feedback','flt.all':'All','empty.title':'Your first idea awaits','empty.desc':'Tap the mic to capture your first idea','cat.business':'Business','cat.product':'Product','cat.content':'Content','cat.personal':'Personal','cat.tech':'Tech','cat.add':'+ New','cap.title':'New Idea','cap.sub':'Speak or type your idea','cap.ph':'Tap the mic to record or type below','cap.ta.ph':'Type your idea here...','cap.rec':'Record Idea','cap.recording':'Tap to Stop','cap.cat':'Category','cap.title.lbl':'Title (optional)','cap.title.ph':'AI will generate if empty','cap.save':'Save Idea','act.insights':'Insights','act.roadmap':'Roadmap','ment.title':'🧠 Ask a Mentor','ment.desc':'Select a mentor for their unique perspective','ment.ask':'Ask for Feedback','ment.asking':'Thinking...','m.strategist':'The Strategist','m.strategist.r':'Market viability','m.critic':'The Critic','m.critic.r':'Finds the flaws','m.creative':'The Creative','m.creative.r':'Expands the idea','m.pragmatic':'The Pragmatic','m.pragmatic.r':'How to execute','m.investor':'The Investor','m.investor.r':'Numbers & ROI','m.user':'The User','m.user.r':'Customer view','conn.title':'Connections','conn.desc':'Discover patterns between your ideas','conn.find':'🔍 Find Connections','conn.finding':'Analyzing...','conn.empty.title':'No connections yet','conn.empty.desc':'Need at least 3 ideas','set.title':'Settings','set.profile':'Profile','set.prof':'Profession','set.lang':'Language','set.api':'API','set.apiKey':'API Key','set.data':'Data','set.export':'Export Backup','set.import':'Import Backup','set.delete':'Delete All Data','modal.insights':'Insights','modal.roadmap':'Roadmap','modal.newCat':'New Category','modal.catName':'Name','modal.catEmoji':'Emoji','modal.createCat':'Create','nav.ideas':'Ideas','nav.conn':'Connections','nav.set':'Settings','toast.saved':'Idea saved!','toast.deleted':'Idea deleted','toast.exported':'Backup exported','toast.imported':'Data imported','toast.error':'Something went wrong','toast.apiReq':'Enter a valid API key','toast.profReq':'Select or enter profession','toast.welcome':'Welcome to IdeaForge!','toast.rec':'Recording started','toast.transcribed':'Transcription complete!','toast.needMore':'Need at least 3 ideas'},
-es:{'ob.sub':'Captura, refina y conecta tus ideas','ob.prof.title':'¿A qué te dedicas?','ob.prof.desc':'Ayuda a los mentores a darte feedback relevante','ob.prof.custom':'O escribe tu profesión...','ob.ctx.title':'Cuéntame más sobre ti','ob.ctx.desc':'¿Qué industria? ¿Qué proyectos?','ob.ctx.ph':'Ej: Diseñador UX en startup fintech...','ob.api.title':'API Key de OpenAI','ob.api.desc':'Necesaria para voz e IA. Solo en tu dispositivo.','ob.api.hint':'Obtén tu key en','ob.start':'Comenzar','prof.entrepreneur':'Emprendedor','prof.creative':'Creativo','prof.developer':'Desarrollador','prof.consultant':'Consultor','prof.academic':'Académico','prof.marketing':'Marketing','btn.cont':'Continuar','btn.back':'Atrás','btn.cancel':'Cancelar','btn.done':'Listo','main.title':'Ideas','stat.ideas':'Ideas','stat.cats':'Categorías','stat.fb':'Feedback','flt.all':'Todas','empty.title':'Tu primera idea te espera','empty.desc':'Toca el mic para capturar tu idea','cat.business':'Negocio','cat.product':'Producto','cat.content':'Contenido','cat.personal':'Personal','cat.tech':'Tech','cat.add':'+ Nueva','cap.title':'Nueva Idea','cap.sub':'Habla o escribe tu idea','cap.ph':'Toca el mic o escribe abajo','cap.ta.ph':'Escribe tu idea aquí...','cap.rec':'Grabar Idea','cap.recording':'Toca para Detener','cap.cat':'Categoría','cap.title.lbl':'Título (opcional)','cap.title.ph':'La IA generará uno','cap.save':'Guardar Idea','act.insights':'Insights','act.roadmap':'Roadmap','ment.title':'🧠 Consulta un Mentor','ment.desc':'Selecciona un mentor para su perspectiva','ment.ask':'Pedir Feedback','ment.asking':'Pensando...','m.strategist':'El Estratega','m.strategist.r':'Viabilidad','m.critic':'El Crítico','m.critic.r':'Encuentra fallas','m.creative':'El Creativo','m.creative.r':'Expande la idea','m.pragmatic':'El Pragmático','m.pragmatic.r':'Cómo ejecutar','m.investor':'El Inversor','m.investor.r':'Números y ROI','m.user':'El Usuario','m.user.r':'Vista cliente','conn.title':'Conexiones','conn.desc':'Descubre patrones entre ideas','conn.find':'🔍 Buscar Conexiones','conn.finding':'Analizando...','conn.empty.title':'Sin conexiones','conn.empty.desc':'Necesitas 3+ ideas','set.title':'Ajustes','set.profile':'Perfil','set.prof':'Profesión','set.lang':'Idioma','set.api':'API','set.apiKey':'API Key','set.data':'Datos','set.export':'Exportar','set.import':'Importar','set.delete':'Borrar Todo','modal.insights':'Insights','modal.roadmap':'Roadmap','modal.newCat':'Nueva Categoría','modal.catName':'Nombre','modal.catEmoji':'Emoji','modal.createCat':'Crear','nav.ideas':'Ideas','nav.conn':'Conexiones','nav.set':'Ajustes','toast.saved':'¡Idea guardada!','toast.deleted':'Idea eliminada','toast.exported':'Backup exportado','toast.imported':'Datos importados','toast.error':'Algo salió mal','toast.apiReq':'Ingresa API key válida','toast.profReq':'Selecciona profesión','toast.welcome':'¡Bienvenido!','toast.rec':'Grabación iniciada','toast.transcribed':'¡Transcripción lista!','toast.needMore':'Necesitas 3+ ideas'}};
-const t=k=>(T[S.user?.lang||'en']||T.en)[k]||k;
-const updT=()=>{document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll('[data-tp]').forEach(e=>e.placeholder=t(e.dataset.tp));};
+function toggleLanguage() {
+    haptic();
+    state.user.lang = state.user?.lang === 'es' ? 'en' : 'es';
+    saveState();
+    updateTexts();
+    updateSettingsDisplay();
+    renderCategories();
+    renderMentors();
+    renderIdeas();
+}
 
-// State
-let S={user:null,ideas:[],cats:[{id:'business',emoji:'💼',color:'#00d4aa'},{id:'product',emoji:'📦',color:'#7c3aed'},{id:'content',emoji:'✍️',color:'#f59e0b'},{id:'personal',emoji:'🌱',color:'#ec4899'},{id:'tech',emoji:'🔧',color:'#3b82f6'}],conns:[],curIdea:null,selMentor:null,selCat:null,isRec:false,mr:null,chunks:[],recStart:null,recInt:null};
-const MENTS={strategist:{av:'🎯',n:'m.strategist',r:'m.strategist.r'},critic:{av:'🔥',n:'m.critic',r:'m.critic.r'},creative:{av:'✨',n:'m.creative',r:'m.creative.r'},pragmatic:{av:'🔨',n:'m.pragmatic',r:'m.pragmatic.r'},investor:{av:'💰',n:'m.investor',r:'m.investor.r'},user:{av:'👤',n:'m.user',r:'m.user.r'}};
-const MPROMPTS={strategist:'Business strategist. Analyze: market, competition, barriers, model. Be direct.',critic:'Brutal critic. Find ALL flaws. End with ONE fix.',creative:'Visionary. EXPAND: 10x bigger? Combinations?',pragmatic:'COO. Convert to ACTION: first step, resources, MVP time.',investor:'Investor. Evaluate: cost, return, scalability.',user:'User. Would you pay? Daily use? Frustrations?'};
-const load=()=>{try{const d=localStorage.getItem('ideaforge2');if(d)S={...S,...JSON.parse(d)};}catch(e){}};
-const save=()=>{try{localStorage.setItem('ideaforge2',JSON.stringify({user:S.user,ideas:S.ideas,cats:S.cats,conns:S.conns}));}catch(e){}};
-const haptic=(p=10)=>{if('vibrate'in navigator)navigator.vibrate(p);};
+function editApiKey() {
+    haptic();
+    const newKey = prompt('Enter new API key:');
+    if (newKey && newKey.startsWith('sk-')) {
+        state.user.apiKey = newKey;
+        saveState();
+        updateSettingsDisplay();
+    }
+}
 
-// Nav
-function go(id){haptic();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on',n.dataset.s===id));const showFab=['main','connections'].includes(id);document.getElementById('fabWrap').style.display=showFab?'':'none';document.getElementById('nav').style.display=id==='onboarding'?'none':'';if(id==='capture')resetCap();if(id==='settings')updSet();if(id==='connections')renderConns();}
+function exportData() {
+    haptic();
+    const data = {
+        user: { ...state.user, apiKey: undefined },
+        ideas: state.ideas,
+        categories: state.categories,
+        connections: state.connections,
+        exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ideaforge-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    showToast('Backup exported', 'success');
+}
 
-// Onboarding
-let step=1;
-function nextStep(){haptic();if(step===2){const sel=document.querySelector('.opt[data-v].sel');const cust=document.getElementById('customProf').value.trim();if(!sel&&!cust){toast(t('toast.profReq'),'err');return;}S.user=S.user||{};S.user.prof=cust||sel.dataset.v;}if(step===3)S.user.ctx=document.getElementById('userCtx').value.trim();if(step<4){step++;updOb();}}
-function prevStep(){haptic();if(step>1){step--;updOb();}}
-function updOb(){document.querySelectorAll('.ob-step').forEach(s=>s.classList.toggle('active',+s.dataset.s===step));document.querySelectorAll('.step-bar div').forEach(b=>{const n=+b.dataset.s;b.classList.toggle('done',n<step);});}
-function finishOb(){haptic([50,30,50]);const k=document.getElementById('apiKey').value.trim();if(!k||!k.startsWith('sk-')){toast(t('toast.apiReq'),'err');return;}S.user.apiKey=k;save();go('main');toast(t('toast.welcome'),'ok');}
-document.querySelectorAll('.opt[data-l]').forEach(o=>o.onclick=()=>{haptic();document.querySelectorAll('.opt[data-l]').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');S.user=S.user||{};S.user.lang=o.dataset.l;updT();});
-document.querySelectorAll('.opt[data-v]').forEach(o=>o.onclick=()=>{haptic();document.querySelectorAll('.opt[data-v]').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');document.getElementById('customProf').value='';});
-document.getElementById('customProf').oninput=function(){if(this.value.trim())document.querySelectorAll('.opt[data-v]').forEach(x=>x.classList.remove('sel'));};
+function importData() {
+    haptic();
+    document.getElementById('importInput').click();
+}
 
-// Ideas
-function renderIdeas(flt='all'){const c=document.getElementById('ideasList');const arr=flt==='all'?S.ideas:S.ideas.filter(i=>i.cat===flt);if(!arr.length){c.innerHTML=`<div class="empty"><div class="ico">💭</div><h3>${t('empty.title')}</h3><p>${t('empty.desc')}</p></div>`;renderFilters();return;}c.innerHTML=arr.map(i=>{const cat=S.cats.find(c=>c.id===i.cat)||S.cats[0];const d=new Date(i.at).toLocaleDateString(S.user?.lang||'en',{month:'short',day:'numeric'});const fb=i.fb?.length||0;return`<div class="idea" onclick="viewIdea('${i.id}')"><div class="idea-bar" style="background:${cat.color}"></div><div class="idea-head"><span class="idea-badge" style="color:${cat.color};background:${cat.color}20">${cat.emoji} ${t('cat.'+i.cat)||i.cat}</span><span class="idea-date">${d}</span></div><h3 class="idea-title">${i.title}</h3><p class="idea-preview">${i.content}</p>${fb?`<div class="idea-foot"><span>🧠 ${fb}</span></div>`:''}</div>`;}).join('');renderFilters();}
-function renderFilters(){const c=document.getElementById('filters');const used=[...new Set(S.ideas.map(i=>i.cat))];let h=`<div class="flt on" data-f="all" onclick="filterIdeas('all')">${t('flt.all')}</div>`;used.forEach(id=>{const cat=S.cats.find(c=>c.id===id);if(cat)h+=`<div class="flt" data-f="${id}" onclick="filterIdeas('${id}')">${cat.emoji} ${t('cat.'+id)||id}</div>`;});c.innerHTML=h;}
-function filterIdeas(f){haptic();document.querySelectorAll('.flt').forEach(c=>c.classList.toggle('on',c.dataset.f===f));renderIdeas(f);}
-function updStats(){document.getElementById('sIdeas').textContent=S.ideas.length;document.getElementById('sCats').textContent=[...new Set(S.ideas.map(i=>i.cat))].length;document.getElementById('sFb').textContent=S.ideas.reduce((s,i)=>s+(i.fb?.length||0),0);}
-function viewIdea(id){haptic();const i=S.ideas.find(x=>x.id===id);if(!i)return;S.curIdea=i;S.selMentor=null;const cat=S.cats.find(c=>c.id===i.cat)||S.cats[0];const d=new Date(i.at).toLocaleDateString(S.user?.lang||'en',{year:'numeric',month:'long',day:'numeric'});document.getElementById('detBadge').textContent=`${cat.emoji} ${t('cat.'+i.cat)||i.cat}`;document.getElementById('detBadge').style.cssText=`color:${cat.color};background:${cat.color}20`;document.getElementById('detTitle').textContent=i.title;document.getElementById('detMeta').textContent=d;document.getElementById('detContent').textContent=i.content;document.querySelectorAll('.ment-card').forEach(c=>c.classList.remove('sel'));document.getElementById('mentAction').classList.remove('show');document.getElementById('mentFb').classList.remove('show');go('detail');}
+document.getElementById('importInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+        try {
+            const data = JSON.parse(evt.target.result);
+            if (data.ideas) {
+                state.ideas = data.ideas;
+                state.categories = data.categories || state.categories;
+                state.connections = data.connections || [];
+                saveState();
+                renderIdeas();
+                updateStats();
+                renderCategories();
+                showToast('Data imported', 'success');
+            }
+        } catch (err) {
+            showToast(t('toast.error'), 'error');
+        }
+    };
+    reader.readAsText(file);
+    this.value = '';
+});
 
-// Capture
-function resetCap(){document.getElementById('capPh').classList.remove('hidden');document.getElementById('capTa').classList.add('hidden');document.getElementById('capTa').value='';document.getElementById('capCard').classList.remove('has','rec');document.getElementById('ideaTitle').value='';document.getElementById('saveBtn').disabled=true;document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('sel'));S.selCat=null;if(S.isRec)stopRec();}
-function renderCats(){const c=document.getElementById('catGrid');c.innerHTML=S.cats.map(cat=>`<div class="cat-chip" data-c="${cat.id}" onclick="selCat('${cat.id}')">${cat.emoji} ${t('cat.'+cat.id)||cat.id}</div>`).join('')+`<div class="cat-chip" onclick="openModal('catModal')" style="border-style:dashed;color:var(--t3)">${t('cat.add')}</div>`;}
-function selCat(id){haptic();S.selCat=id;document.querySelectorAll('.cat-chip').forEach(c=>c.classList.toggle('sel',c.dataset.c===id));}
-async function saveIdea(){haptic([50,30,50]);const content=document.getElementById('capTa').value.trim();let title=document.getElementById('ideaTitle').value.trim();const cat=S.selCat||'business';if(!content)return;const btn=document.getElementById('saveBtn');btn.disabled=true;btn.innerHTML='<div class="spinner" style="width:20px;height:20px;border-width:2px"></div>';if(!title)title=await genTitle(content);const idea={id:Date.now().toString(),title,content,cat,at:new Date().toISOString(),fb:[]};S.ideas.unshift(idea);save();btn.innerHTML=t('cap.save');toast(t('toast.saved'),'ok');go('main');renderIdeas();updStats();}
-async function genTitle(c){try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:`Generate a short title (max 6 words) for this idea. ${S.user?.lang==='es'?'In Spanish.':'In English.'} Only the title:\n\n${c}`}],max_tokens:30})});const d=await r.json();return d.choices[0].message.content.trim();}catch(e){return c.substring(0,40)+'...';}}
+function clearAllData() {
+    haptic();
+    if (confirm('Delete ALL data? This cannot be undone.')) {
+        if (confirm('Are you absolutely sure?')) {
+            localStorage.removeItem('ideaforge-v2');
+            location.reload();
+        }
+    }
+}
 
-// Voice
-async function toggleRec(){if(S.isRec)stopRec();else startRec();}
-async function startRec(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(stream);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.onstop=async()=>{const blob=new Blob(S.chunks,{type:'audio/webm'});await transcribe(blob);stream.getTracks().forEach(t=>t.stop());};S.mr.start();S.isRec=true;S.recStart=Date.now();document.getElementById('voiceBtn').classList.add('rec');document.getElementById('voiceLbl').textContent=t('cap.recording');document.getElementById('capCard').classList.add('rec');document.getElementById('recInd').classList.add('show');S.recInt=setInterval(updRecTime,1000);haptic([50,30,50]);toast(t('toast.rec'),'ok');}catch(e){toast(t('toast.error'),'err');}}
-function stopRec(){if(S.mr&&S.isRec){S.mr.stop();S.isRec=false;document.getElementById('voiceBtn').classList.remove('rec');document.getElementById('voiceLbl').textContent=t('cap.rec');document.getElementById('capCard').classList.remove('rec');document.getElementById('recInd').classList.remove('show');clearInterval(S.recInt);haptic([30,20,30]);}}
-function updRecTime(){const e=Math.floor((Date.now()-S.recStart)/1000);document.getElementById('recTime').textContent=`${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;}
-async function transcribe(blob){toast('Transcribing...');const fd=new FormData();fd.append('file',blob,'audio.webm');fd.append('model','whisper-1');fd.append('language',S.user?.lang||'en');try{const r=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{'Authorization':`Bearer ${S.user.apiKey}`},body:fd});if(!r.ok)throw new Error();const d=await r.json();document.getElementById('capPh').classList.add('hidden');const ta=document.getElementById('capTa');ta.classList.remove('hidden');ta.value=d.text;document.getElementById('capCard').classList.add('has');document.getElementById('saveBtn').disabled=false;haptic([50,30,50]);toast(t('toast.transcribed'),'ok');}catch(e){toast(t('toast.error'),'err');}}
-document.getElementById('capTa').oninput=function(){const has=this.value.trim().length>0;document.getElementById('saveBtn').disabled=!has;document.getElementById('capCard').classList.toggle('has',has);};
+// ============ IDEA ACTIONS ============
+function editIdea() {
+    haptic();
+    if (!state.currentIdea) return;
+    const newContent = prompt('Edit idea:', state.currentIdea.content);
+    if (newContent !== null && newContent.trim()) {
+        state.currentIdea.content = newContent.trim();
+        const newTitle = prompt('Edit title:', state.currentIdea.title);
+        if (newTitle !== null && newTitle.trim()) {
+            state.currentIdea.title = newTitle.trim();
+        }
+        saveState();
+        document.getElementById('detailTitle').textContent = state.currentIdea.title;
+        document.getElementById('detailContent').textContent = state.currentIdea.content;
+    }
+}
 
-// Mentors
-function renderMents(){document.getElementById('mentCarousel').innerHTML=Object.entries(MENTS).map(([id,m])=>`<div class="ment-card" data-m="${id}" onclick="selMent('${id}')"><div class="ment-avatar">${m.av}</div><div class="ment-name">${t(m.n)}</div><div class="ment-role">${t(m.r)}</div></div>`).join('');}
-function selMent(id){haptic();S.selMentor=id;const m=MENTS[id];document.querySelectorAll('.ment-card').forEach(c=>c.classList.toggle('sel',c.dataset.m===id));document.getElementById('selMentAv').textContent=m.av;document.getElementById('selMentName').textContent=t(m.n);document.getElementById('selMentRole').textContent=t(m.r);document.getElementById('mentAction').classList.add('show');document.getElementById('mentFb').classList.remove('show');}
-async function askMentor(){if(!S.selMentor||!S.curIdea)return;haptic();const btn=document.getElementById('askMentBtn');btn.disabled=true;btn.innerHTML=`<div class="spinner" style="width:20px;height:20px;border-width:2px"></div> ${t('ment.asking')}`;const lang=S.user?.lang||'en';try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:`${MPROMPTS[S.selMentor]} Respond in ${lang==='es'?'Spanish':'English'}. Context: ${S.user.prof}. ${S.user.ctx||''}`},{role:'user',content:`Idea: "${S.curIdea.title}"\n\n${S.curIdea.content}`}],max_tokens:500})});const d=await r.json();const fb=d.choices[0].message.content;S.curIdea.fb=S.curIdea.fb||[];S.curIdea.fb.push({m:S.selMentor,fb,at:new Date().toISOString()});save();updStats();document.getElementById('mentFb').textContent=fb;document.getElementById('mentFb').classList.add('show');haptic([50,30,50]);}catch(e){toast(t('toast.error'),'err');}btn.disabled=false;btn.innerHTML=t('ment.ask');}
+function deleteIdea() {
+    haptic();
+    if (!state.currentIdea) return;
+    if (confirm('Delete this idea?')) {
+        state.ideas = state.ideas.filter(i => i.id !== state.currentIdea.id);
+        saveState();
+        showToast(t('toast.deleted'));
+        navigateTo('main');
+    }
+}
 
-// Insights & Roadmap
-async function showInsights(){haptic();openModal('insightsModal');document.getElementById('insightsContent').innerHTML=`<div class="loading"><div class="spinner"></div></div>`;const lang=S.user?.lang||'en';try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:`Generate insights: 💎 Unique value, 🎯 Audience, ⚠️ Risk, 🚀 Opportunity, 💡 Question. ${lang==='es'?'In Spanish.':'In English.'}`},{role:'user',content:`Context: ${S.user.prof}. ${S.user.ctx||''}\n\nIdea: "${S.curIdea.title}"\n${S.curIdea.content}`}],max_tokens:600})});const d=await r.json();document.getElementById('insightsContent').innerHTML=d.choices[0].message.content;}catch(e){document.getElementById('insightsContent').innerHTML=t('toast.error');}}
-async function showRoadmap(){haptic();openModal('roadmapModal');document.getElementById('roadmapContent').innerHTML=`<div class="loading"><div class="spinner"></div></div>`;const lang=S.user?.lang||'en';try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:`Create roadmap: 📅 Week 1, 📅 Weeks 2-4, 📅 Months 2-3, 💰 Cost, ⏱️ MVP time. ${lang==='es'?'In Spanish.':'In English.'}`},{role:'user',content:`Context: ${S.user.prof}. ${S.user.ctx||''}\n\nIdea: "${S.curIdea.title}"\n${S.curIdea.content}`}],max_tokens:800})});const d=await r.json();document.getElementById('roadmapContent').innerHTML=d.choices[0].message.content;}catch(e){document.getElementById('roadmapContent').innerHTML=t('toast.error');}}
+// ============ CATEGORIES ============
+function createCategory() {
+    haptic();
+    const name = document.getElementById('newCategoryName').value.trim();
+    const emoji = document.getElementById('newCategoryEmoji').value.trim() || '📌';
+    if (!name) return;
+    
+    const id = name.toLowerCase().replace(/\s+/g, '-');
+    const colors = ['#00d4aa', '#7c3aed', '#f59e0b', '#ec4899', '#3b82f6', '#10b981'];
+    const color = colors[state.categories.length % colors.length];
+    
+    state.categories.push({ id, emoji, color });
+    saveState();
+    renderCategories();
+    closeModal('categoryModal');
+    
+    document.getElementById('newCategoryName').value = '';
+    document.getElementById('newCategoryEmoji').value = '';
+}
 
-// Connections
-async function findConns(){if(S.ideas.length<3){toast(t('toast.needMore'),'err');return;}haptic();const btn=document.getElementById('findConnBtn');btn.disabled=true;btn.innerHTML=`<div class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px"></div>${t('conn.finding')}`;const lang=S.user?.lang||'en';const sum=S.ideas.map(i=>`- ${i.title}: ${i.content.substring(0,80)}`).join('\n');try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.user.apiKey}`},body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:`Find 2-3 idea groups. JSON only: {"connections":[{"theme":"...","ideas":["t1","t2"],"insight":"..."}]}. ${lang==='es'?'Spanish.':'English.'}`},{role:'user',content:`Ideas:\n${sum}`}],max_tokens:800})});const d=await r.json();const c=d.choices[0].message.content.replace(/```json\n?|\n?```/g,'');S.conns=JSON.parse(c).connections;save();renderConns();haptic([50,30,50]);}catch(e){toast(t('toast.error'),'err');}btn.disabled=false;btn.innerHTML=t('conn.find');}
-function renderConns(){const c=document.getElementById('connList');if(!S.conns?.length){c.innerHTML=`<div class="empty"><div class="ico">🔗</div><h3>${t('conn.empty.title')}</h3><p>${t('conn.empty.desc')}</p></div>`;return;}c.innerHTML=S.conns.map(cn=>`<div class="conn-card"><div class="conn-theme">🔗 ${cn.theme}</div><div class="conn-ideas">${cn.ideas.map(ti=>{const i=S.ideas.find(x=>x.title===ti);return`<div class="conn-item" ${i?`onclick="viewIdea('${i.id}')"`:''}>` +ti+'</div>';}).join('')}</div><div class="conn-insight">${cn.insight}</div></div>`).join('');}
+// ============ SEARCH ============
+function searchIdeas() {
+    haptic();
+    const query = prompt('Search ideas:');
+    if (query?.trim()) {
+        const results = state.ideas.filter(i => 
+            i.title.toLowerCase().includes(query.toLowerCase()) ||
+            i.content.toLowerCase().includes(query.toLowerCase())
+        );
+        if (results.length === 1) {
+            viewIdea(results[0].id);
+        } else if (results.length > 1) {
+            // Temporarily filter to show only results
+            const originalIdeas = [...state.ideas];
+            state.ideas = results;
+            renderIdeas();
+            state.ideas = originalIdeas;
+        }
+    }
+}
 
-// Settings
-function updSet(){document.getElementById('setProfVal').textContent=S.user?.prof||'-';document.getElementById('setLangVal').textContent=S.user?.lang==='es'?'Español':'English';const k=S.user?.apiKey||'';document.getElementById('apiDisp').textContent=k?'••••'+k.slice(-4):'••••';}
-function editProf(){haptic();const p=prompt('Profession:',S.user?.prof||'');if(p!==null){S.user.prof=p;const c=prompt('Context:',S.user?.ctx||'');if(c!==null)S.user.ctx=c;save();updSet();}}
-function toggleLang(){haptic();S.user.lang=S.user?.lang==='es'?'en':'es';save();updT();updSet();renderCats();renderMents();renderIdeas();}
-function editApiKey(){haptic();const k=prompt('New API key:');if(k&&k.startsWith('sk-')){S.user.apiKey=k;save();updSet();}}
-function expData(){haptic();const d={user:{...S.user,apiKey:undefined},ideas:S.ideas,cats:S.cats,conns:S.conns,at:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ideaforge-${new Date().toISOString().split('T')[0]}.json`;a.click();toast(t('toast.exported'),'ok');}
-function impData(){haptic();document.getElementById('impInput').click();}
-document.getElementById('impInput').onchange=function(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.ideas){S.ideas=d.ideas;S.cats=d.cats||S.cats;S.conns=d.conns||[];save();renderIdeas();updStats();renderCats();toast(t('toast.imported'),'ok');}}catch(e){toast(t('toast.error'),'err');}};r.readAsText(f);this.value='';};
-function clearData(){haptic();if(confirm('Delete ALL data?')&&confirm('Sure?')){localStorage.removeItem('ideaforge2');location.reload();}}
+// ============ MODALS & TOAST ============
+function openModal(id) {
+    haptic();
+    document.getElementById(id).classList.add('visible');
+}
 
-// Idea Actions
-function editIdea(){haptic();if(!S.curIdea)return;const c=prompt('Edit:',S.curIdea.content);if(c!==null&&c.trim()){S.curIdea.content=c.trim();const ti=prompt('Title:',S.curIdea.title);if(ti!==null&&ti.trim())S.curIdea.title=ti.trim();save();document.getElementById('detTitle').textContent=S.curIdea.title;document.getElementById('detContent').textContent=S.curIdea.content;}}
-function delIdea(){haptic();if(!S.curIdea)return;if(confirm('Delete this idea?')){S.ideas=S.ideas.filter(i=>i.id!==S.curIdea.id);save();toast(t('toast.deleted'));go('main');renderIdeas();updStats();}}
-function createCat(){haptic();const n=document.getElementById('newCatName').value.trim();const e=document.getElementById('newCatEmoji').value.trim()||'📌';if(!n)return;const id=n.toLowerCase().replace(/\s+/g,'-');const colors=['#00d4aa','#7c3aed','#f59e0b','#ec4899','#3b82f6','#10b981'];S.cats.push({id,emoji:e,color:colors[S.cats.length%colors.length]});save();renderCats();closeModal('catModal');document.getElementById('newCatName').value='';document.getElementById('newCatEmoji').value='';}
-function doSearch(){haptic();const q=prompt('Search:');if(q?.trim()){const res=S.ideas.filter(i=>i.title.toLowerCase().includes(q.toLowerCase())||i.content.toLowerCase().includes(q.toLowerCase()));if(res.length===1)viewIdea(res[0].id);else if(res.length>1){S.ideas=res;renderIdeas();}}}
+function closeModal(id) {
+    haptic();
+    document.getElementById(id).classList.remove('visible');
+}
 
-// Modal & Toast
-function openModal(id){haptic();document.getElementById(id).classList.add('show');}
-function closeModal(id){haptic();document.getElementById(id).classList.remove('show');}
-function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.classList.remove('show'),2800);}
+function showToast(message, type = '') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast visible' + (type ? ` ${type}` : '');
+    setTimeout(() => toast.classList.remove('visible'), 3000);
+}
 
-// Init
-load();
-if(S.user?.apiKey){go('main');renderIdeas();updStats();}else{go('onboarding');}
-updT();renderCats();renderMents();
+// ============ INITIALIZATION ============
+function init() {
+    loadState();
+    
+    if (state.user?.apiKey) {
+        // User has completed onboarding - go directly to main
+        navigateTo('main');
+    } else {
+        // Show onboarding
+        navigateTo('onboarding');
+    }
+    
+    updateTexts();
+    renderCategories();
+    renderMentors();
+}
+
+// Start the app
+init();
 </script>
 </body>
 </html>
