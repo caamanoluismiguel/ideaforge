@@ -1,7 +1,7 @@
 {
   "name": "SPORA",
   "short_name": "SPORA",
-  "description": "Capture, refine, and connect your ideas with AI mentors",
+  "description": "Turn fleeting thoughts into permanent assets",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0a0f",

@@ -298,7 +298,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 
 <!-- ONBOARDING -->
 <div id="onboarding" class="screen active">
-<div class="brand"><div class="brand-logo">🌱</div><h1>SPORA</h1><p>Capture, refine, connect ideas</p></div>
+<div class="brand"><div class="brand-logo">🌱</div><h1>SPORA</h1><p>From invisible to inevitable</p></div>
 <div class="card">
 <div class="progress"><div class="progress-dot done" data-s="1"></div><div class="progress-dot" data-s="2"></div><div class="progress-dot" data-s="3"></div><div class="progress-dot" data-s="4"></div></div>
 <div class="step active" data-s="1"><h2>Choose Language</h2><p class="desc">Select your preferred language</p><div class="opts" id="langOpts"><div class="opt sel" data-v="en"><div class="opt-icon">🇺🇸</div><div class="opt-label">English</div></div><div class="opt" data-v="es"><div class="opt-icon">🇪🇸</div><div class="opt-label">Español</div></div></div><button class="btn btn-p btn-full" id="s1Next">Continue</button></div>
@@ -310,9 +310,9 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 
 <!-- MAIN -->
 <div id="main" class="screen"><div class="screen-pad">
-<div class="header"><h1>Ideas</h1><div class="header-actions"><button class="icon-btn" id="searchBtn">🔍</button></div></div>
-<div class="search-wrap" id="searchWrap"><div class="search-bar"><input class="input" id="searchIn" placeholder="Search ideas..."><button class="btn btn-s" id="searchX">✕</button></div></div>
-<div class="stats"><div class="stat"><div class="stat-val" id="sIdeas">0</div><div class="stat-label">Ideas</div></div><div class="stat"><div class="stat-val" id="sMentored">0</div><div class="stat-label">Mentored</div></div><div class="stat"><div class="stat-val" id="sFb">0</div><div class="stat-label">Feedback</div></div></div>
+<div class="header"><h1>Seeds</h1><div class="header-actions"><button class="icon-btn" id="searchBtn">🔍</button></div></div>
+<div class="search-wrap" id="searchWrap"><div class="search-bar"><input class="input" id="searchIn" placeholder="Search seeds..."><button class="btn btn-s" id="searchX">✕</button></div></div>
+<div class="stats"><div class="stat"><div class="stat-val" id="sIdeas">0</div><div class="stat-label">Seeds</div></div><div class="stat"><div class="stat-val" id="sMentored">0</div><div class="stat-label">Grown</div></div><div class="stat"><div class="stat-val" id="sFb">0</div><div class="stat-label">Insights</div></div></div>
 <div class="filters" id="filters"></div>
 <div class="ideas" id="ideas"></div>
 </div></div>
@@ -320,12 +320,12 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <!-- CAPTURE -->
 <div id="capture" class="screen"><div class="screen-pad">
 <button class="back-btn" id="capBack">← Cancel</button>
-<div class="capture-head"><h1>New Idea</h1><p>Speak or type your idea</p></div>
-<div class="capture-box" id="capBox"><div class="capture-ph" id="capPh"><div class="icon">🎤</div><p>Tap mic to record or type below</p></div><textarea class="capture-ta hidden" id="capTa" placeholder="Type idea..."></textarea></div>
-<button class="voice-btn" id="voiceBtn"><span>🎤</span><span id="voiceT">Record Idea</span></button>
+<div class="capture-head"><h1>Plant a Seed</h1><p>Speak your thought — we'll help it grow</p></div>
+<div class="capture-box" id="capBox"><div class="capture-ph" id="capPh"><div class="icon">🎤</div><p>Tap to capture your fleeting thought<br><span style="font-size:11px;opacity:.7">Voice → Structured seed in seconds</span></p></div><textarea class="capture-ta hidden" id="capTa" placeholder="Type your thought..."></textarea></div>
+<button class="voice-btn" id="voiceBtn"><span>🎤</span><span id="voiceT">Record</span></button>
 <div class="form-sec"><div class="form-label">Category</div><div class="cat-grid" id="catGrid"></div></div>
 <div class="form-sec"><div class="form-label">Title (optional)</div><input class="input" id="ideaTitle" placeholder="AI generates if empty"></div>
-<button class="btn btn-p btn-full" id="saveBtn" disabled>Save Idea</button>
+<button class="btn btn-p btn-full" id="saveBtn" disabled>Plant Seed</button>
 </div></div>
 
 <!-- DETAIL -->
@@ -366,27 +366,27 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <!-- State: Empty (< 4 ideas) -->
 <div id="colliderEmpty" class="collider-state">
 <div class="collider-state-icon">🧬</div>
-<h3>Need More Ideas</h3>
-<p>Collider requires at least 4 ideas to find unexpected connections.</p>
-<p id="colliderEmptyCount">You have 0 ideas.</p>
-<button class="btn btn-p" onclick="goTo('capture')">🌱 Capture Ideas</button>
+<h3>Need More Seeds</h3>
+<p>Collider cross-pollinates your ideas to create unexpected hybrids.</p>
+<p id="colliderEmptyCount">You have 0 seeds.</p>
+<button class="btn btn-p" id="plantSeedsBtn">🌱 Plant Seeds</button>
 </div>
 
 <!-- State: Daily Limit -->
 <div id="colliderLimit" class="collider-state hidden">
-<div class="collider-state-icon">⚡</div>
-<h3>Daily Limit Reached</h3>
-<p>You've created 5 collisions today. Come back tomorrow for more!</p>
+<div class="collider-state-icon">🌿</div>
+<h3>Garden Resting</h3>
+<p>You've created 5 hybrids today. Let them germinate — come back tomorrow!</p>
 <div class="collision-history" id="todayCollisions"></div>
 </div>
 
 <!-- State: Ready (Grid Selection) -->
 <div id="colliderReady" class="hidden">
 <div class="collider-header">
-<h3>Select two ideas</h3>
+<h3>Cross-pollinate</h3>
 <div class="collider-remaining" id="colliderRemaining">5/5</div>
 </div>
-<p class="collider-instruction">Tap two ideas to collide them</p>
+<p class="collider-instruction">Select two seeds to cross-pollinate</p>
 <div class="collider-grid" id="colliderGrid"></div>
 
 <!-- Selection Bar -->
@@ -396,7 +396,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <span class="collider-selection-plus">⚡</span>
 <span class="collider-selection-idea" id="selIdeaB">-</span>
 </div>
-<button class="btn btn-p btn-full" id="collideBtn">💥 Collide!</button>
+<button class="btn btn-p btn-full" id="collideBtn">🌸 Cross-pollinate!</button>
 </div>
 </div>
 
@@ -409,9 +409,9 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <div class="collision-card-synthesis" id="collisionSynthesis">Loading...</div>
 </div>
 <div class="collision-parents">
-<span class="collision-parent" id="collisionParentA">Idea A</span>
+<span class="collision-parent" id="collisionParentA">Seed A</span>
 <span class="collision-arrow">⚡</span>
-<span class="collision-parent" id="collisionParentB">Idea B</span>
+<span class="collision-parent" id="collisionParentB">Seed B</span>
 </div>
 <div class="collision-actions">
 <button class="btn btn-s" id="backToGridBtn">← Back</button>
@@ -430,7 +430,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <div class="set-sec"><div class="set-sec-title">Profile</div><div class="set-card"><div class="set-item" id="editProf"><div class="set-item-left"><span class="set-item-icon">👤</span><span class="set-item-label">Profession</span></div><span class="set-item-val" id="profV">-</span></div><div class="set-item" id="toggleLang"><div class="set-item-left"><span class="set-item-icon">🌐</span><span class="set-item-label">Language</span></div><span class="set-item-val" id="langV">English</span></div></div></div>
 <div class="set-sec"><div class="set-sec-title">API</div><div class="set-card"><div class="set-item" id="editApi"><div class="set-item-left"><span class="set-item-icon">🔑</span><span class="set-item-label">API Key</span></div><span class="api-badge" id="apiV">••••</span></div><div class="set-item" id="testApi"><div class="set-item-left"><span class="set-item-icon">🧪</span><span class="set-item-label">Test API</span></div></div></div></div>
 <div class="set-sec"><div class="set-sec-title">Data</div><div class="set-card"><div class="set-item" id="expBtn"><div class="set-item-left"><span class="set-item-icon">📤</span><span class="set-item-label">Export</span></div></div><div class="set-item" id="impBtn"><div class="set-item-left"><span class="set-item-icon">📥</span><span class="set-item-label">Import</span></div></div><div class="set-item danger" id="clrBtn"><div class="set-item-left"><span class="set-item-icon">🗑️</span><span class="set-item-label">Delete All</span></div></div></div></div>
-<div class="about"><strong>SPORA v1.0</strong>Made with 🌱 for dreamers</div>
+<div class="about"><strong>SPORA v1.0</strong>Turn fleeting thoughts into permanent assets 🌱</div>
 </div></div>
 
 <!-- FAB & Recording -->
@@ -439,7 +439,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 
 <!-- Navigation -->
 <div class="nav" id="nav">
-<button class="nav-item active" data-s="main"><span class="nav-icon">💡</span><span>Ideas</span></button>
+<button class="nav-item active" data-s="main"><span class="nav-icon">🌱</span><span>Seeds</span></button>
 <button class="nav-item" data-s="connections"><span class="nav-icon">🔗</span><span>Connect</span></button>
 <button class="nav-item" data-s="settings"><span class="nav-icon">⚙️</span><span>Settings</span></button>
 </div>
@@ -448,7 +448,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <div class="modal-overlay" id="insModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">💡 Insights</h3><button class="modal-close" data-m="insModal">×</button></div><div class="modal-body" id="insBody"></div></div></div>
 <div class="modal-overlay" id="roadModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">🗺️ Roadmap</h3><button class="modal-close" data-m="roadModal">×</button></div><div class="modal-body" id="roadBody"></div></div></div>
 <div class="modal-overlay" id="catModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">New Category</h3><button class="modal-close" data-m="catModal">×</button></div><div class="form-sec"><div class="form-label">Name</div><input class="input" id="catName" placeholder="e.g., Hobbies"></div><div class="form-sec"><div class="form-label">Emoji</div><input class="input" id="catEmoji" placeholder="🎮" maxlength="2"></div><button class="btn btn-p btn-full" id="createCat">Create</button></div></div>
-<div class="modal-overlay" id="editModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">Edit Idea</h3><button class="modal-close" data-m="editModal">×</button></div><div class="form-sec"><div class="form-label">Title</div><input class="input" id="edTitle"></div><div class="form-sec"><div class="form-label">Content</div><textarea class="input" id="edContent" style="min-height:150px"></textarea></div><button class="btn btn-p btn-full" id="saveEdit">Save Changes</button></div></div>
+<div class="modal-overlay" id="editModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">Edit Seed</h3><button class="modal-close" data-m="editModal">×</button></div><div class="form-sec"><div class="form-label">Title</div><input class="input" id="edTitle"></div><div class="form-sec"><div class="form-label">Content</div><textarea class="input" id="edContent" style="min-height:150px"></textarea></div><button class="btn btn-p btn-full" id="saveEdit">Save Changes</button></div></div>
 <div class="modal-overlay" id="shareModal"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><h3 class="modal-title">📤 Share</h3><button class="modal-close" data-m="shareModal">×</button></div><div class="form-sec"><div class="form-label">Copy text</div><textarea class="input" id="shareTxt" readonly style="min-height:120px"></textarea></div><button class="btn btn-p btn-full" id="copyShare">📋 Copy</button></div></div>
 
 <!-- Confirm Dialog -->
