@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
-<title>IdeaForge</title>
+<title>SPORA</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -194,18 +194,27 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 .conn-progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
 .conn-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
 
-/* Collider */
-.collider{position:relative;height:calc(100vh - 200px - var(--safe-t) - var(--safe-b));min-height:400px;touch-action:none;user-select:none}
-.collider-area{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:40px 20px}
-.collider-glow{position:absolute;top:50%;left:50%;width:200px;height:200px;transform:translate(-50%,-50%);background:radial-gradient(circle,var(--purple-glow) 0%,transparent 70%);opacity:0;transition:opacity .1s;pointer-events:none}
-.collider-card{position:absolute;width:calc(100% - 40px);max-width:300px;background:var(--bg2);border:2px solid var(--border);border-radius:16px;padding:18px;cursor:grab;transition:box-shadow .2s,border-color .2s;touch-action:none}
-.collider-card:active{cursor:grabbing}
-.collider-card.dragging{box-shadow:0 12px 40px rgba(0,0,0,.5);border-color:var(--purple);z-index:10}
-.collider-card-cat{font-size:11px;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.collider-card-title{font-size:16px;font-weight:600;margin-bottom:6px;line-height:1.3}
-.collider-card-preview{font-size:13px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.collider-counter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--text3);background:var(--bg2);padding:8px 16px;border-radius:100px;border:1px solid var(--border);z-index:5}
-.collider-skip{position:absolute;bottom:20px;left:50%;transform:translateX(-50%)}
+/* Collider Grid */
+.collider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.collider-header h3{font-size:16px;font-weight:600}
+.collider-remaining{font-size:13px;color:var(--accent);background:var(--accent-dim);padding:6px 12px;border-radius:100px}
+.collider-instruction{text-align:center;color:var(--text2);font-size:14px;margin-bottom:16px}
+.collider-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.collider-card{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;position:relative}
+.collider-card:active{transform:scale(.97)}
+.collider-card.selected{border-color:var(--purple);background:var(--purple-dim);box-shadow:0 0 20px var(--purple-glow)}
+.collider-card.selected::after{content:'✓';position:absolute;top:8px;right:8px;width:20px;height:20px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.collider-card.used{opacity:.4;pointer-events:none}
+.collider-card.used::before{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px;color:var(--text3)}
+.collider-card-cat{font-size:11px;color:var(--text3);margin-bottom:4px}
+.collider-card-title{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Selection Bar */
+.collider-selection{position:sticky;bottom:0;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:16px;display:none}
+.collider-selection.show{display:block;animation:fadeUp .2s}
+.collider-selection-ideas{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;font-size:14px}
+.collider-selection-idea{background:var(--bg3);padding:8px 14px;border-radius:8px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.collider-selection-plus{color:var(--purple);font-size:18px}
 
 /* Collider States */
 .collider-state{text-align:center;padding:60px 30px}
@@ -229,15 +238,6 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 .collision-flash{position:fixed;inset:0;background:var(--purple);opacity:0;pointer-events:none;z-index:100}
 .collision-flash.show{animation:flash .3s ease-out}
 @keyframes flash{0%{opacity:.6}100%{opacity:0}}
-
-/* Skipped Section */
-.skipped-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
-.skipped-title{font-size:13px;font-weight:600;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.skipped-list{display:flex;flex-direction:column;gap:8px}
-.skipped-pair{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
-.skipped-pair:active{background:var(--bg3)}
-.skipped-pair-ideas{flex:1;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px}
-.skipped-pair-retry{font-size:12px;color:var(--accent)}
 
 /* Collision History */
 .collision-history{margin-top:20px}
@@ -298,12 +298,12 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 
 <!-- ONBOARDING -->
 <div id="onboarding" class="screen active">
-<div class="brand"><div class="brand-logo">💡</div><h1>IdeaForge</h1><p>Capture, refine, connect ideas</p></div>
+<div class="brand"><div class="brand-logo">🌱</div><h1>SPORA</h1><p>Capture, refine, connect ideas</p></div>
 <div class="card">
 <div class="progress"><div class="progress-dot done" data-s="1"></div><div class="progress-dot" data-s="2"></div><div class="progress-dot" data-s="3"></div><div class="progress-dot" data-s="4"></div></div>
 <div class="step active" data-s="1"><h2>Choose Language</h2><p class="desc">Select your preferred language</p><div class="opts" id="langOpts"><div class="opt sel" data-v="en"><div class="opt-icon">🇺🇸</div><div class="opt-label">English</div></div><div class="opt" data-v="es"><div class="opt-icon">🇪🇸</div><div class="opt-label">Español</div></div></div><button class="btn btn-p btn-full" id="s1Next">Continue</button></div>
 <div class="step" data-s="2"><h2>What do you do?</h2><p class="desc">Helps AI give relevant feedback</p><div class="opts" id="profOpts"><div class="opt" data-v="entrepreneur"><div class="opt-icon">🚀</div><div class="opt-label">Entrepreneur</div></div><div class="opt" data-v="creative"><div class="opt-icon">🎨</div><div class="opt-label">Creative</div></div><div class="opt" data-v="developer"><div class="opt-icon">💻</div><div class="opt-label">Developer</div></div><div class="opt" data-v="consultant"><div class="opt-icon">📊</div><div class="opt-label">Consultant</div></div><div class="opt" data-v="academic"><div class="opt-icon">📚</div><div class="opt-label">Academic</div></div><div class="opt" data-v="other"><div class="opt-icon">✨</div><div class="opt-label">Other</div></div></div><input class="input" id="customProf" placeholder="Or type profession..."><div class="btns"><button class="btn btn-s" id="s2B">Back</button><button class="btn btn-p" id="s2N">Continue</button></div></div>
-<div class="step" data-s="3"><h2>Tell us more</h2><p class="desc">What excites you?</p><textarea class="input" id="userCtx" placeholder="e.g., UX designer at fintech..."></textarea><div class="hint-box">💡 <strong>Why?</strong> AI mentors use this for personalized feedback</div><div class="btns"><button class="btn btn-s" id="s3B">Back</button><button class="btn btn-p" id="s3N">Continue</button></div><div class="skip"><a href="#" id="s3Skip">Skip for now</a></div></div>
+<div class="step" data-s="3"><h2>Tell us more</h2><p class="desc">What excites you?</p><textarea class="input" id="userCtx" placeholder="e.g., UX designer at fintech..."></textarea><div class="hint-box">🌱 <strong>Why?</strong> AI mentors use this for personalized feedback</div><div class="btns"><button class="btn btn-s" id="s3B">Back</button><button class="btn btn-p" id="s3N">Continue</button></div><div class="skip"><a href="#" id="s3Skip">Skip for now</a></div></div>
 <div class="step" data-s="4"><h2>OpenAI API Key</h2><p class="desc">Powers voice & AI mentors</p><input type="password" class="input" id="apiKey" placeholder="sk-..."><div class="hint">Get key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></div><div class="hint-box">🔒 <strong>Privacy:</strong> Stored only on this device</div><div class="btns"><button class="btn btn-s" id="s4B">Back</button><button class="btn btn-p" id="s4Done">Start Creating</button></div></div>
 </div>
 </div>
@@ -365,19 +365,11 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 
 <!-- State: Empty (< 4 ideas) -->
 <div id="colliderEmpty" class="collider-state">
-<div class="collider-state-icon">🎲</div>
+<div class="collider-state-icon">🧬</div>
 <h3>Need More Ideas</h3>
 <p>Collider requires at least 4 ideas to find unexpected connections.</p>
 <p id="colliderEmptyCount">You have 0 ideas.</p>
-<button class="btn btn-p" onclick="goTo('capture')">✨ Capture Ideas</button>
-</div>
-
-<!-- State: Exhausted (all pairs used) -->
-<div id="colliderExhausted" class="collider-state hidden">
-<div class="collider-state-icon">🔄</div>
-<h3>All Pairs Explored!</h3>
-<p>You've collided all possible idea combinations. Add more ideas to unlock new collisions.</p>
-<button class="btn btn-p" onclick="goTo('capture')">✨ Add More Ideas</button>
+<button class="btn btn-p" onclick="goTo('capture')">🌱 Capture Ideas</button>
 </div>
 
 <!-- State: Daily Limit -->
@@ -388,24 +380,23 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <div class="collision-history" id="todayCollisions"></div>
 </div>
 
-<!-- State: Ready (The Collider) -->
+<!-- State: Ready (Grid Selection) -->
 <div id="colliderReady" class="hidden">
-<div class="collider">
-<div class="collider-glow" id="colliderGlow"></div>
-<div class="collider-area">
-<div class="collider-card" id="colliderCardA">
-<div class="collider-card-cat" id="cardACat">💼 Business</div>
-<div class="collider-card-title" id="cardATitle">Loading...</div>
-<div class="collider-card-preview" id="cardAPreview">...</div>
+<div class="collider-header">
+<h3>Select two ideas</h3>
+<div class="collider-remaining" id="colliderRemaining">5/5</div>
 </div>
-<div class="collider-counter" id="colliderCounter">5/5</div>
-<div class="collider-card" id="colliderCardB">
-<div class="collider-card-cat" id="cardBCat">💼 Business</div>
-<div class="collider-card-title" id="cardBTitle">Loading...</div>
-<div class="collider-card-preview" id="cardBPreview">...</div>
+<p class="collider-instruction">Tap two ideas to collide them</p>
+<div class="collider-grid" id="colliderGrid"></div>
+
+<!-- Selection Bar -->
+<div class="collider-selection" id="colliderSelection">
+<div class="collider-selection-ideas">
+<span class="collider-selection-idea" id="selIdeaA">-</span>
+<span class="collider-selection-plus">⚡</span>
+<span class="collider-selection-idea" id="selIdeaB">-</span>
 </div>
-</div>
-<button class="btn btn-s collider-skip" id="skipPairBtn">🔀 Skip Pair</button>
+<button class="btn btn-p btn-full" id="collideBtn">💥 Collide!</button>
 </div>
 </div>
 
@@ -423,16 +414,10 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <span class="collision-parent" id="collisionParentB">Idea B</span>
 </div>
 <div class="collision-actions">
-<button class="btn btn-s" id="nextCollisionBtn">🔀 Next</button>
+<button class="btn btn-s" id="backToGridBtn">← Back</button>
 <button class="btn btn-p" id="saveCollisionBtn">💾 Save</button>
 </div>
 </div>
-</div>
-
-<!-- Skipped Pairs Section -->
-<div id="skippedSection" class="skipped-section hidden">
-<div class="skipped-title">⏭️ Skipped Pairs <span id="skippedCount">(0)</span></div>
-<div class="skipped-list" id="skippedList"></div>
 </div>
 
 </div><!-- /connCollider -->
@@ -445,7 +430,7 @@ textarea.input{resize:none;min-height:90px;line-height:1.5}
 <div class="set-sec"><div class="set-sec-title">Profile</div><div class="set-card"><div class="set-item" id="editProf"><div class="set-item-left"><span class="set-item-icon">👤</span><span class="set-item-label">Profession</span></div><span class="set-item-val" id="profV">-</span></div><div class="set-item" id="toggleLang"><div class="set-item-left"><span class="set-item-icon">🌐</span><span class="set-item-label">Language</span></div><span class="set-item-val" id="langV">English</span></div></div></div>
 <div class="set-sec"><div class="set-sec-title">API</div><div class="set-card"><div class="set-item" id="editApi"><div class="set-item-left"><span class="set-item-icon">🔑</span><span class="set-item-label">API Key</span></div><span class="api-badge" id="apiV">••••</span></div><div class="set-item" id="testApi"><div class="set-item-left"><span class="set-item-icon">🧪</span><span class="set-item-label">Test API</span></div></div></div></div>
 <div class="set-sec"><div class="set-sec-title">Data</div><div class="set-card"><div class="set-item" id="expBtn"><div class="set-item-left"><span class="set-item-icon">📤</span><span class="set-item-label">Export</span></div></div><div class="set-item" id="impBtn"><div class="set-item-left"><span class="set-item-icon">📥</span><span class="set-item-label">Import</span></div></div><div class="set-item danger" id="clrBtn"><div class="set-item-left"><span class="set-item-icon">🗑️</span><span class="set-item-label">Delete All</span></div></div></div></div>
-<div class="about"><strong>IdeaForge v3.1</strong>Made with ❤️ for dreamers</div>
+<div class="about"><strong>SPORA v1.0</strong>Made with 🌱 for dreamers</div>
 </div></div>
 
 <!-- FAB & Recording -->
