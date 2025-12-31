@@ -1,7 +1,7 @@
 {
     "name": "IdeaForge",
     "short_name": "IdeaForge",
-    "description": "Captura, refina y conecta tus ideas con mentores IA",
+    "description": "Capture, refine, and connect your ideas with AI mentors",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0a0a0f",
